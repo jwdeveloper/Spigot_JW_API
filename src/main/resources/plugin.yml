@@ -1,4 +1,4 @@
 name: JW_GUI
 version: ${project.version}
-main: jw.gui.Main
+main: jw.api.gui.Main
 api-version: 1.17
