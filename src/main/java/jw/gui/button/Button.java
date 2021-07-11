@@ -272,6 +272,8 @@ public class Button extends ItemStack
         this.tag = tag;
     }
 
+
+
     public ButtonEvent getOnClick() {
         return onClick;
     }
@@ -291,6 +293,11 @@ public class Button extends ItemStack
     public void setSound(Sound sound)
     {
         this.sound =sound;
+    }
+
+    public boolean checkPermission(Player player)
+    {
+       return player.hasPermission(permission);
     }
 
     public static Button getItemStack(ItemStack itemStack) {

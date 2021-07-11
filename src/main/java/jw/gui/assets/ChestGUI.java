@@ -73,6 +73,8 @@ public class ChestGUI<T> extends InventoryGUI {
 
                 if(button.hasSound())
                     player.playSound(player.getLocation(),button.getSound(),1,1);
+                if(!button.checkPermission(player))
+                  return;
 
 
                 button.getOnClick().Execute(player,button);

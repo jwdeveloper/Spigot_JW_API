@@ -11,18 +11,18 @@ public class TaskTimer
 {
     public interface  I_Task
     {
-        public void execute(int time, TaskTimer taskTimer);
+         void execute(int time, TaskTimer taskTimer);
     }
 
     I_Task task;
 
-    Consumer onstop;
-    int speed =20;
-    int time = 0;
-    int stopAfter = 99999999;
-    int runafter = 0;
-    boolean iscancel = false;
-    BukkitTask taskId ;
+    private Consumer<TaskTimer> onstop;
+    private int speed =20;
+    private int time = 0;
+    private int stopAfter = 99999999;
+    private int runAfter = 0;
+    private  boolean isCancel = false;
+    private  BukkitTask taskId ;
     public TaskTimer(int tick,I_Task task)
     {
         this.speed = tick;
@@ -38,11 +38,11 @@ public class TaskTimer
 
     public void Cancel()
     {
-        iscancel =true;
+        isCancel =true;
     }
     public TaskTimer StartAfter(int i)
     {
-        this.runafter = i;
+        this.runAfter = i;
         return this;
     }
 
@@ -51,7 +51,7 @@ public class TaskTimer
         this.stopAfter = i;
         return this;
     }
-    public TaskTimer OnStop(Consumer task)
+    public TaskTimer OnStop(Consumer<TaskTimer> task)
     {
         this.onstop = task;
         return this;
@@ -61,7 +61,7 @@ public class TaskTimer
     public void RunAgain()
     {
         this.time = 0;
-        this.iscancel = false;
+        this.isCancel = false;
     }
 
 
@@ -69,7 +69,7 @@ public class TaskTimer
     {
         taskId= Bukkit.getScheduler().runTaskTimerAsynchronously(InicializerAPI.GetPlugin(),()->
         {
-            if(time>=stopAfter || iscancel)
+            if(time>=stopAfter || isCancel)
             {
                 if(this.onstop!=null)
                     this.onstop.accept(null);
@@ -79,13 +79,13 @@ public class TaskTimer
             }
             task.execute(time,this);
             time++;
-        },runafter,speed);
+        },runAfter,speed);
     }
     public void Run()
     {
         taskId= Bukkit.getScheduler().runTaskTimer(InicializerAPI.GetPlugin(),()->
         {
-            if(time>=stopAfter || iscancel)
+            if(time>=stopAfter || isCancel)
             {
                 if(this.onstop!=null)
                     this.onstop.accept(null);
@@ -95,7 +95,7 @@ public class TaskTimer
             }
             task.execute(time,this);
             time++;
-        },runafter,speed);
+        },runAfter,speed);
     }
 
 }

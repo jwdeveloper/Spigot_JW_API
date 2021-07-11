@@ -13,6 +13,7 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.function.Consumer;
 
 public abstract class InventoryGUI {
@@ -251,10 +252,7 @@ public abstract class InventoryGUI {
 
     public void ClearButtons()
     {
-        for(int i=0;i<buttons.length;i++)
-        {
-            buttons[i]=null;
-        }
+        Arrays.fill(buttons, null);
         this.Refresh();
     }
 

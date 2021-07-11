@@ -25,7 +25,6 @@ public class RepositoryGUI<T extends Entity> extends ListGUI<T>
     {
         super(parent, name, 6);
         this.repositoryGUI = repositoryGUI;
-        this.EnableLogs(true);
     }
 
     @Override
@@ -60,8 +59,6 @@ public class RepositoryGUI<T extends Entity> extends ListGUI<T>
         button.SetDescription(ChatColor.GREEN+" "+ChatColor.BOLD+"[ Click to show details ]");
         return button;
     }
-
-
    /* public List<String> DisplayValues(Player player,T model)
     {
         List<String> result = new ArrayList<>();

@@ -52,6 +52,11 @@ public class ButtonBuilder<SELF extends ButtonBuilder<SELF>>
         this.button.SetHighlighted(highlighted);
         return Self();
     }
+    public SELF SetPermission(String permission)
+    {
+        this.button.SetPermission(permission);
+        return Self();
+    }
     public SELF SetClickSound(Sound sound)
     {
          this.button.setSound(sound);
