@@ -64,10 +64,8 @@ public class PacketListener
 
     public static void setToBed(Player p) {
 
-        EntityPlayer entityPlayer = ((CraftPlayer)p).getHandle();
+        /*EntityPlayer entityPlayer = ((CraftPlayer)p).getHandle();
         entityPlayer.setPosition(p.getLocation().getX(), p.getLocation().getY()-0.5, p.getLocation().getZ());
-
-
         PacketPlayOutNamedEntitySpawn packetPlayOutNamedEntitySpawn = new PacketPlayOutNamedEntitySpawn(entityPlayer);
 
         entityPlayer.b.sendPacket(new PacketPlayOutPlayerInfo(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.e, entityPlayer));
@@ -79,7 +77,7 @@ public class PacketListener
         entityPlayer.b.sendPacket(new PacketPlayOutEntityMetadata(entityPlayer.getId(), entityPlayer.getDataWatcher(), false));
         DataWatcher watcher = entityPlayer.getDataWatcher();
 
-        entityPlayer.b.sendPacket(new PacketPlayOutEntityMetadata(entityPlayer.getId(), watcher, false));
+        entityPlayer.b.sendPacket(new PacketPlayOutEntityMetadata(entityPlayer.getId(), watcher, false));*/
     }
 
 }

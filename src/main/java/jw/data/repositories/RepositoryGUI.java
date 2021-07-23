@@ -1,7 +1,7 @@
 package jw.data.repositories;
 
 import jw.data.models.Entity;
-import jw.gui.assets.chestgui.ListGUI;
+import jw.gui.examples.chestgui.ListGUI;
 import jw.gui.button.Button;
 import jw.gui.core.InventoryGUI;
 import org.bukkit.ChatColor;
@@ -52,21 +52,4 @@ public class RepositoryGUI<T extends Entity> extends ListGUI<T>
         button.SetDescription(ChatColor.GREEN+" "+ChatColor.BOLD+"[ Click to show details ]");
         return button;
     }
-   /* public List<String> DisplayValues(Player player,T model)
-    {
-        List<String> result = new ArrayList<>();
-
-        for(AttributeManager.MethodAttribute method :attributeManager.getMethodAttribute())
-        {
-            if(!method.hasCustomName())
-                continue;
-
-            if(!method.isPlayerMeetPermisssions(player, ButtonActionsEnum.DISPLAY))
-                continue;
-
-            result.add(ChatColor.WHITE+" "+ChatColor.BOLD+method.getCustomName()+" "+ChatColor.RESET+method.getValue());
-        }
-
-      return result;
-    }*/
 }

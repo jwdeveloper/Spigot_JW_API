@@ -1,5 +1,6 @@
 package jw;
 import jw.gui.core.InventoryGUIEventsHander;
+import jw.map.MapEventsHandler;
 import org.bukkit.plugin.Plugin;
 
 public final class InicializerAPI
@@ -14,11 +15,8 @@ public final class InicializerAPI
     public static void AttachePlugin(Plugin plugin)
     {
         InicializerAPI.plugin = plugin;
-        OnPluginAttached(plugin);
+        InventoryGUIEventsHander.Instnace();
+        MapEventsHandler.Instnace();
     }
 
-    private static void OnPluginAttached(Plugin plugin)
-    {
-        InventoryGUIEventsHander.Instnace();
-    }
 }

@@ -163,14 +163,34 @@ public abstract class InventoryGUI {
     }
 
     protected void RefreshButtons() {
+        Button button = null;
         for (int i = 0; i < buttons.length; i++)
-                this.inventory.setItem(i, buttons[i]);
+        {
+            button = buttons[i];
+            if(button != null && button.IsActive())
+            {
+                this.inventory.setItem(i,button);
+            }
+            else
+            {
+                this.inventory.setItem(i,null);
+            }
+        }
     }
 
     public void RefreshButton(Button button)
     {
         int index = GetButtonIndex(button);
-        this.inventory.setItem(index, buttons[index]);
+        if(button.IsActive())
+        {
+            this.inventory.setItem(index, buttons[index]);
+        }
+        else
+        {
+            this.inventory.setItem(index,null);
+        }
+
+
     }
 
     public void SetActive(boolean isActive) {

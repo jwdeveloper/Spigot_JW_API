@@ -1,7 +1,8 @@
 package jw.data.repositories;
 
-import jw.utilites.FileHelper;
+import jw.utilites.files.FileHelper;
 import jw.utilites.ObjectHelper;
+import jw.utilites.files.JsonFileHelper;
 import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ public abstract class RepositoryManager
 
     public RepositoryManager()
     {
-        path =  FileHelper.PluginPath();
+        path =  FileHelper.pluginPath();
     }
     public RepositoryManager(String path)
     {
@@ -39,7 +40,7 @@ public abstract class RepositoryManager
         {
             try
             {
-                Object  loaded_object= FileHelper.Load(path,this.objects.get(i).getClass().getSimpleName()+".json",this.objects.get(i).getClass());
+                Object  loaded_object= JsonFileHelper.load(path,this.objects.get(i).getClass().getSimpleName(),this.objects.get(i).getClass());
 
                 if(loaded_object != null)
                 {
@@ -61,15 +62,7 @@ public abstract class RepositoryManager
         }
         for (Object object : objects)
         {
-            try
-            {
-                object.toString();
-                FileHelper.Save(object,path,object.getClass().getSimpleName()+".json");
-            }
-            catch (Exception e)
-            {
-                Bukkit.getServer().getConsoleSender().sendMessage("Save obj to file "+e.getMessage().toString());
-            }
+            JsonFileHelper.save(object,path,object.getClass().getSimpleName());
         }
     }
 }

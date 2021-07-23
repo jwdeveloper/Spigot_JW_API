@@ -48,9 +48,7 @@ public class InventoryGUIEventsHander implements Listener {
         Inventory inventory;
         for (InventoryGUI inventoryGUI : inventoriesGui) {
             inventory = inventoryGUI.inventory;
-            //Bukkit.getConsoleSender().sendMessage("Inventoyrs "+event.getInventory().toString()+ " " +inventory.toString());
             if (inventory == null || !inventoryGUI.isOpen) continue;
-            // Bukkit.getConsoleSender().sendMessage("Open "+members.get(i).getCurrentTitle()+ " "+members.size());
             if (event.getInventory() == inventory) {
                 inventoryGUI.Refresh();
                 break;
@@ -87,7 +85,7 @@ public class InventoryGUIEventsHander implements Listener {
                 event.setCancelled(true);
                 final ItemStack clickedItem = event.getCurrentItem();
                 if (clickedItem == null || clickedItem.getType() == Material.AIR) return;
-                inventoryGUI.DoClick((Player) event.getWhoClicked(), event.getRawSlot(), clickedItem);
+                inventoryGUI.DoClick((Player)event.getWhoClicked(), event.getRawSlot(), clickedItem);
                 break;
             }
         }

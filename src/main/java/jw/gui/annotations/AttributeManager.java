@@ -1,7 +1,6 @@
 package jw.gui.annotations;
 
 import jw.data.annotation.Display;
-import jw.data.binding.BindedField;
 import jw.gui.button.ButtonActionsEnum;
 import org.bukkit.entity.Player;
 
@@ -14,7 +13,7 @@ import java.util.List;
 public class AttributeManager
 {
 
-    private List<MethodAttribute> MethodAttribute = new ArrayList<>();
+  /*  private List<MethodAttribute> MethodAttribute = new ArrayList<>();
 
     public AttributeManager(Class class_)
     {
@@ -30,8 +29,6 @@ public class AttributeManager
     {
         for(Method method :class_.getMethods())
         {
-            if(method.getReturnType() != BindedField.class)
-                continue;
 
             Annotation[] annotations = method.getAnnotations();
             if(annotations.length == 0)
@@ -132,6 +129,6 @@ public class AttributeManager
                permissions.put(actionsEnum,perms);
            }
         }
-    }
+    }*/
 
 }

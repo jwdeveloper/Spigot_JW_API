@@ -11,7 +11,7 @@ public class ButtonBuilder<SELF extends ButtonBuilder<SELF>>
 
     public ButtonBuilder()
     {
-        button = new Button(Material.DIRT);
+        button = new Button(Material.DIRT,ButtonActionsEnum.CLICK);
     }
 
     public SELF SetPosition(int height,int width)

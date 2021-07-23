@@ -1,7 +1,6 @@
 package jw.gui.button;
 
 import jw.gui.events.ButtonEvent;
-import jw.packets.ObjectBinder;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
@@ -28,15 +27,10 @@ public class Button extends ItemStack
     private Sound sound;
     private ButtonEvent onClick = (player,button)->{};
     private boolean highlighted = false;
-
-
-    private final ObjectBinder objectBinder;
-
     public Button(Material material)
     {
         super(material);
         this.HideAtributes();
-        this.objectBinder = new ObjectBinder();
     }
     public Button(Material material, ButtonActionsEnum action)
     {
@@ -68,33 +62,6 @@ public class Button extends ItemStack
         this(material,name,onClick);
         SetPosition(height,width);
     }
-
-    public void DisplayBindedValue()
-    {
-            if(Material.class ==  objectBinder.getClass_())
-            {
-                Material value =(Material)objectBinder.getFieldValue();
-                this.setType(value);
-            }
-            if(boolean.class == objectBinder.getClass_())
-            {
-                boolean value =(boolean)objectBinder.getFieldValue();
-                if(value)
-                {
-                    SetDescription(ChatColor.GREEN+"[" +value + "]");
-                }
-                else
-                {
-                    SetDescription(ChatColor.RED+"[" +value + "]");
-                }
-                SetHighlighted(value);
-            }
-            else
-            {
-                SetDescription(objectBinder.getFieldValue().toString());
-            }
-    }
-
     public void HideAtributes()
     {
         ItemMeta meta = this.getItemMeta();
@@ -167,10 +134,7 @@ public class Button extends ItemStack
         this.setType(material);
     }
 
-    public boolean isBinded()
-    {
-     return   this.objectBinder.hasObject() && this.objectBinder.hasField();
-    }
+
 
     public void displayHoldedObject()
     {
@@ -258,9 +222,6 @@ public class Button extends ItemStack
     {
         return this.action;
     }
-    public ObjectBinder getObjectBinder() {
-        return objectBinder;
-    }
     public void setObjectHolder(Object objectHolder) {
         this.objectHolder = objectHolder;
     }
@@ -275,8 +236,6 @@ public class Button extends ItemStack
     {
         this.isActive =isActive;
     }
-
-
     public ButtonEvent getOnClick() {
         return onClick;
     }
@@ -304,7 +263,7 @@ public class Button extends ItemStack
        return player.hasPermission(permission);
     }
 
-    public static Button getItemStack(ItemStack itemStack) {
+    public static Button fromItemStack(ItemStack itemStack) {
         Button Button = new Button(itemStack.getType(), itemStack.getType().name());
         Button.setData(itemStack.getData());
         Button.setItemMeta(itemStack.getItemMeta());

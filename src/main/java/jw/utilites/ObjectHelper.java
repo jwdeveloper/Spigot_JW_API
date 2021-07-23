@@ -53,6 +53,7 @@ public class ObjectHelper {
         }
         return null;
     }
+
     public static <T extends Enum<T>> T EnumToString(Class<T> c, String string) {
         if (c != null && string != null) {
             try {

@@ -1,7 +1,7 @@
 package jw.data.repositories;
 
 import jw.data.models.Entity;
-import jw.utilites.FileHelper;
+import jw.utilites.files.JsonFileHelper;
 import org.bukkit.ChatColor;
 
 import java.util.ArrayList;
@@ -34,17 +34,24 @@ public class RepositoryBase<T extends Entity> implements Repository<T> {
 
     @Override
     public Class<T> getEntityClass() {
-        return  entityClass;
+        return entityClass;
     }
 
     @Override
     public T getOne(String id) {
-        Optional<T> data = content.stream().filter(p -> p.id.equalsIgnoreCase(id)).findFirst();
+        Optional<T> data = content
+                .stream()
+                .filter(p -> p.id.equalsIgnoreCase(id))
+                .findFirst();
         return data.orElseGet(this::CreateEmpty);
     }
 
     public T getOneByName(String name) {
-        Optional<T> data = content.stream().filter(p -> ChatColor.stripColor(p.name).equalsIgnoreCase(name)).findFirst();
+        Optional<T> data = content
+                .stream()
+                .filter(p -> ChatColor.stripColor(p.name)
+                .equalsIgnoreCase(name))
+                .findFirst();
         return data.orElseGet(this::CreateEmpty);
     }
 
@@ -53,15 +60,13 @@ public class RepositoryBase<T extends Entity> implements Repository<T> {
         return content;
     }
 
-    public ArrayList<T> getMany()
-    {
+    public ArrayList<T> getMany() {
         return content;
     }
 
     @Override
     public boolean insertOne(T data) {
-        if(data!=null)
-        {
+        if (data != null) {
             data.id = UUID.randomUUID().toString();
             content.add(data);
             return true;
@@ -71,7 +76,7 @@ public class RepositoryBase<T extends Entity> implements Repository<T> {
 
     @Override
     public boolean insertMany(ArrayList<T> data) {
-        data.stream().forEach(a -> this.insertOne(a));
+        data.stream().forEach(this::insertOne);
         return true;
     }
 
@@ -87,9 +92,10 @@ public class RepositoryBase<T extends Entity> implements Repository<T> {
 
     @Override
     public boolean deleteOne(String id, T data) {
-        Optional<T> exist = content.stream().filter(p -> p.id.equalsIgnoreCase(id)).findFirst();
-        if(exist.isPresent())
-        {
+        Optional<T> exist = content.stream()
+                .filter(p -> p.id.equalsIgnoreCase(id))
+                .findFirst();
+        if (exist.isPresent()) {
             content.remove(exist.get());
             return true;
         }
@@ -98,39 +104,32 @@ public class RepositoryBase<T extends Entity> implements Repository<T> {
 
     @Override
     public boolean deleteMany(ArrayList<T> data) {
-        data.stream().forEach(a -> this.deleteOne(a.id,a));
+        data.stream().forEach(a -> this.deleteOne(a.id, a));
         return true;
     }
 
-    public void deleteAll()
-    {
+    public void deleteAll() {
         content.clear();
     }
 
     @Override
     public boolean loadData() {
-        try
-        {
-            content= FileHelper.Load_List(path,fileName+".json",entityClass);
+        try {
+            content = JsonFileHelper.loadList(path, fileName, entityClass);
             return true;
-        }
-        catch (Exception e)
-        {
-            onError.accept(fileName+".json"+" " +entityClass.getName()+" "+e.getMessage());
+        } catch (Exception e) {
+            onError.accept(fileName + " " + entityClass.getName() + " " + e.getMessage());
             return false;
         }
     }
 
     @Override
     public boolean saveData() {
-        try
-        {
-            FileHelper.Save(content,path,fileName+".json");
+        try {
+            JsonFileHelper.save(content, path, fileName);
             return true;
-        }
-        catch (Exception e)
-        {
-            onError.accept(fileName+".json"+" " +entityClass.getName()+" "+e.getMessage());
+        } catch (Exception e) {
+            onError.accept(fileName + " " + entityClass.getName() + " " + e.getMessage());
             return false;
         }
     }
@@ -138,7 +137,7 @@ public class RepositoryBase<T extends Entity> implements Repository<T> {
     public T CreateEmpty() {
         try {
             T empty = entityClass.newInstance();
-            empty.id  = "-1";
+            empty.id = "-1";
             empty.name = "-1";
             return empty;
         } catch (IllegalAccessException | InstantiationException igonre) {
