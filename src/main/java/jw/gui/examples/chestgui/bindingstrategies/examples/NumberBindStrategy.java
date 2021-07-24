@@ -15,13 +15,13 @@ public class NumberBindStrategy extends BindingStrategy<Number> {
     }
 
     @Override
-    public void OnClick(Player player, Button button,BindingStrategy<Number> bindingStrategy, Number currentValue) {
+    public void onClick(Player player, Button button,BindingStrategy<Number> bindingStrategy, Number currentValue) {
 
     }
 
     @Override
-    public void OnValueChanged(ChestGUI inventoryGUI, Button button, Number newValue)
+    public void onValueChanged(ChestGUI inventoryGUI, Button button, Number newValue)
     {
-          button.SetDescription(ChatColor.DARK_GREEN+this.getFieldName()+": "+this.getValue());
+          button.setDescription(ChatColor.DARK_GREEN+this.getFieldName()+": "+this.getValue());
     }
 }

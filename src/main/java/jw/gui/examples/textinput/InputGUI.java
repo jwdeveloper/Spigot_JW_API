@@ -56,7 +56,7 @@ public class InputGUI {
     }
 
     public void Open(Player player) {
-        parent.SetActive(false);
+        parent.setActive(false);
         AnivalGUIOld guiTextinput = new AnivalGUIOld(player, new AnivalGUIOld.AnvilClickEventHandler() {
 
             @Override
@@ -73,7 +73,7 @@ public class InputGUI {
                             }
                         }
                         onText.Execute(player, e.getText());
-                        parent.Open(player);
+                        parent.open(player);
 
                         e.setWillClose(true);
                         e.setWillDestroy(true);
@@ -81,7 +81,7 @@ public class InputGUI {
                     if (e.getSlot() == AnivalGUIOld.AnvilSlot.INPUT_LEFT) {
 
                         onExit.Execute(player, " ");
-                        parent.Open(player);
+                        parent.open(player);
 
                         e.setWillClose(true);
                         e.setWillDestroy(true);

@@ -30,7 +30,7 @@ public class Button extends ItemStack
     public Button(Material material)
     {
         super(material);
-        this.HideAtributes();
+        this.hideAtributes();
     }
     public Button(Material material, ButtonActionsEnum action)
     {
@@ -40,7 +40,7 @@ public class Button extends ItemStack
     public Button(Material material, String title)
     {
         this(material,ButtonActionsEnum.CLICK);
-        this.SetName(title);
+        this.setName(title);
     }
     public Button(Material material, String title, ButtonActionsEnum action)
     {
@@ -50,7 +50,7 @@ public class Button extends ItemStack
     public Button(Material material, String title, String description)
     {
         this(material,title);
-        this.SetDescription(description);
+        this.setDescription(description);
     }
     public Button(Material material, String name, ButtonEvent onClick)
     {
@@ -60,9 +60,9 @@ public class Button extends ItemStack
     public Button(Material material, String name, int height, int width,  ButtonEvent onClick)
     {
         this(material,name,onClick);
-        SetPosition(height,width);
+        setPosition(height,width);
     }
-    public void HideAtributes()
+    public void hideAtributes()
     {
         ItemMeta meta = this.getItemMeta();
         if(meta ==null)
@@ -71,7 +71,7 @@ public class Button extends ItemStack
         this.setItemMeta(meta);
     }
 
-    public boolean CanPlayerUse(Player player)
+    public boolean canPlayerUse(Player player)
     {
         if( this.permission!=null && !player.hasPermission(permission))
         {
@@ -80,7 +80,7 @@ public class Button extends ItemStack
         }
         return true;
     }
-    public void SetHighlighted(boolean value)
+    public void setHighlighted(boolean value)
     {
         ItemMeta meta = this.getItemMeta();
         highlighted = value;
@@ -90,13 +90,13 @@ public class Button extends ItemStack
             meta.removeEnchant(Enchantment.ARROW_FIRE);
         this.setItemMeta(meta);
     }
-    public void SetCustomModelData(int id)
+    public void setCustomModelData(int id)
     {
         ItemMeta meta = this.getItemMeta();
         meta.setCustomModelData(id);
         this.setItemMeta(meta);
     }
-    public void SetName(String name)
+    public void setName(String name)
     {
         ItemMeta meta = this.getItemMeta();
         if(meta ==null)
@@ -105,7 +105,7 @@ public class Button extends ItemStack
         meta.setDisplayName(name.replace("&","§"));
         this.setItemMeta(meta);
     }
-    public void AddDescription(String ... description)
+    public void addDescription(String ... description)
     {
         if(description == null)
             return;
@@ -159,14 +159,14 @@ public class Button extends ItemStack
         }
 
 
-        this.SetDescription(description);
+        this.setDescription(description);
     }
 
-    public void SetDescription(String ... description)
+    public void setDescription(String ... description)
     {
-       this.SetDescription(Arrays.asList(description));
+       this.setDescription(Arrays.asList(description));
     }
-    public void SetDescription(List<String> description)
+    public void setDescription(List<String> description)
     {
         if(description == null)
             return;
@@ -178,37 +178,33 @@ public class Button extends ItemStack
         meta.setLore(description);
         this.setItemMeta(meta);
     }
-    public <T> T GetHoldingObject()
+    public <T> T getHoldingObject()
     {
         return (T)this.objectHolder;
     }
-    public void SetPermission(String permission)
+    public void setPermission(String permission)
     {
         this.permission = permission;
     }
-    public void SetPosition(int height,int width)
+    public void setPosition(int height,int width)
     {
         this.position = new Vector(width,height,0);
     }
-    public void SetHeight(int height)
+    public void setHeight(int height)
     {
         this.position.setY(height);
     }
-    public void SetWidth(int width)
+    public void setWidth(int width)
     {
         this.position.setX(width);
     }
-    public int GetHeight()
+    public int getHeight()
     {
         return position.getBlockY();
     }
-    public int GetWidth()
+    public int getWidth()
     {
         return position.getBlockX();
-    }
-    public void SetActive(boolean isActive)
-    {
-        this.isActive = isActive;
     }
     public  boolean IsActive()
     {
@@ -218,7 +214,7 @@ public class Button extends ItemStack
     {
         this.action = action;
     }
-    public ButtonActionsEnum GetAction()
+    public ButtonActionsEnum getAction()
     {
         return this.action;
     }

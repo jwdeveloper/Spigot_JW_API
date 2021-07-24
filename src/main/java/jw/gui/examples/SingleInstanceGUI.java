@@ -16,7 +16,7 @@ public abstract class SingleInstanceGUI<T extends InventoryGUI>
             return guiHashMap.get(player.getUniqueId());
 
         T gui = setGUI();
-        gui.SetPlayer(player);
+        gui.setPlayer(player);
         guiHashMap.put(player.getUniqueId(), gui);
         return gui;
     }

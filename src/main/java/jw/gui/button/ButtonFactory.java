@@ -24,7 +24,7 @@ public  class ButtonFactory {
 
     public static Button GetBackground(Material material) {
         Button gui_icon = new Button(material);
-        gui_icon.SetName(" ");
+        gui_icon.setName(" ");
         gui_icon.setAction(ButtonActionsEnum.BACKGROUND);
         return gui_icon;
     }

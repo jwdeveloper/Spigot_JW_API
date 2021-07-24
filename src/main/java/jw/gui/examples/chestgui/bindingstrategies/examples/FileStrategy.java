@@ -32,19 +32,19 @@ public class FileStrategy extends BindingStrategy<String> {
     }
 
     @Override
-    public void OnClick(Player player, Button button,BindingStrategy<String> bindingStrategy, String currentValue)
+    public void onClick(Player player, Button button,BindingStrategy<String> bindingStrategy, String currentValue)
     {
-        SelectListGUI.Get(player,"Select file", Files(),(player2, button1) ->
+        SelectListGUI.get(player,"Select file", Files(),(player2, button1) ->
         {
-            setValue(button1.GetHoldingObject());
-            chestGUI.Open(player);
-        }).SetParent(chestGUI).Open(player);
+            setValue(button1.getHoldingObject());
+            chestGUI.open(player);
+        }).setParent(chestGUI).open(player);
     }
 
     @Override
-    public void OnValueChanged(ChestGUI inventoryGUI, Button button, String newValue)
+    public void onValueChanged(ChestGUI inventoryGUI, Button button, String newValue)
     {
-        button.SetDescription("File: "+ newValue);
+        button.setDescription("File: "+ newValue);
     }
     private ArrayList<Button> Files()
     {

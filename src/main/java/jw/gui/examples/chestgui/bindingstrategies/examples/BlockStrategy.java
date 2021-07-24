@@ -17,20 +17,20 @@ public class BlockStrategy extends BindingStrategy<Material>
     }
 
     @Override
-    public void OnClick(Player player, Button button,BindingStrategy<Material> bindingStrategy, Material currentValue)
+    public void onClick(Player player, Button button,BindingStrategy<Material> bindingStrategy, Material currentValue)
     {
         SelectListGUI.Get(player, SelectListGUI.SearchType.Block, (player1, button1) ->
         {
-            setValue(button1.GetHoldingObject());
-            this.chestGUI.Open(player1);
-        }).SetParent(chestGUI).Open(player);
+            setValue(button1.getHoldingObject());
+            this.chestGUI.open(player1);
+        }).setParent(chestGUI).open(player);
     }
 
     @Override
-    public void OnValueChanged(ChestGUI inventoryGUI, Button button, Material newValue)
+    public void onValueChanged(ChestGUI inventoryGUI, Button button, Material newValue)
     {
         button.setMaterial(newValue);
-        button.AddDescription(ChatColor.WHITE+ Emoticons.arrowright+" "+newValue.name());
+        button.addDescription(ChatColor.WHITE+ Emoticons.arrowright+" "+newValue.name());
     }
 
 }

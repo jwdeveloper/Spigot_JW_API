@@ -30,7 +30,7 @@ public class QuestionFormGUI extends SingleInstanceGUI<ChestGUI> {
     public static ChestGUI Open(Player player,String title, Consumer<Boolean> result)
     {
         ChestGUI gui = Instance().getGUI(player);
-        gui.SetTitle(title);
+        gui.setTitle(title);
         return gui;
     }
 

@@ -26,25 +26,16 @@ public abstract class InventoryGUI {
     protected Player player;
     protected boolean isTitleSet = false;
     protected String displayedName;
-    protected boolean enableLogs = false;
-    protected boolean isOpen = false;
-    protected InventoryGUI parent;
-    protected static final int max_title_size = 38;
+    private boolean enableLogs = false;
+    private boolean isOpen = false;
+    private InventoryGUI parent;
+    protected static final int MAX_TITLE_SIZE = 38;
 
-    public Consumer<String> onError = (a) -> {
-    };
-
-    public abstract void OnClick(Player player, Button button);
-
-    public abstract void OnRefresh(Player player);
-
-    public abstract void OnOpen(Player player);
-
-    public abstract void OnClose(Player player);
-
-    protected abstract void DoClick(Player player, int index, ItemStack itemStack);
-
-    ArrayList<Integer> observedTasks = new ArrayList<>();
+    protected abstract void onClick(Player player, Button button);
+    protected abstract void onRefresh(Player player);
+    protected abstract void onOpen(Player player);
+    protected abstract void onClose(Player player);
+    protected abstract void doClick(Player player, int index, ItemStack itemStack);
 
     protected InventoryGUI(String name, int height, InventoryType type) {
         this.height = Math.min(height, 6);
@@ -60,7 +51,7 @@ public abstract class InventoryGUI {
         this.parent = parent;
     }
 
-    private void CreateInventory() {
+    private void createInventory() {
         switch (inventoryType) {
             case CHEST:
                 this.inventory = Bukkit.createInventory(player, size, this.displayedName);
@@ -77,80 +68,62 @@ public abstract class InventoryGUI {
                 break;
         }
     }
-
-    public void Add_task(int id) {
-        if (!observedTasks.contains(id))
-            observedTasks.add(id);
-    }
-
-    public void Stop_task(int id) {
-        if (observedTasks.contains(id))
-            Bukkit.getScheduler().cancelTask(id);
-    }
-
-    public void Stop_tasks() {
-        for (Integer observedTask : observedTasks) {
-            Bukkit.getScheduler().cancelTask(observedTask);
-        }
-    }
-
-    public void Open(Player player) {
+    public void open(Player player) {
         if (parent != null) {
-            parent.Close();
+            parent.close();
         }
 
         this.player = player;
 
         if (player != null && this.player.isOnline()) {
-            this.OnOpen(this.player);
-            CreateInventory();
-            RefreshButtons();
-            InventoryGUIEventsHander.Instnace().Register(this);
+            this.onOpen(this.player);
+            createInventory();
+            refreshButtons();
+            InventoryGUIEventsHander.Instnace().register(this);
             player.openInventory(this.inventory);
             isOpen = true;
         }
         if (this.enableLogs)
-            this.DisplayLog("Open", ChatColor.GREEN);
+            this.displayLog("Open", ChatColor.GREEN);
     }
 
-    public void Refresh() {
+    public void refresh() {
         if (player != null && this.player.isOnline() && isOpen) {
-            RefreshButtons();
-            this.OnRefresh(this.player);
+            refreshButtons();
+            this.onRefresh(this.player);
         }
         if (this.enableLogs)
-            this.DisplayLog("Refresh", ChatColor.YELLOW);
+            this.displayLog("Refresh", ChatColor.YELLOW);
     }
 
-    public void Close() {
-        InventoryGUIEventsHander.Instnace().Unregister(this);
+    public void close() {
+        InventoryGUIEventsHander.Instnace().unregister(this);
         isOpen = false;
         if (player != null && this.player.isOnline()) {
-            this.OnClose(this.player);
-            //  this.onClose.forEach(e -> e.Execute(player,null));
+            this.onClose(this.player);
             player.closeInventory();
         }
         if (this.enableLogs)
-            this.DisplayLog("Close", ChatColor.RED);
+            this.displayLog("Close", ChatColor.RED);
     }
 
-    public void SetName(String name) {
+    public void setName(String name) {
         this.displayedName = name;
         if (player != null && player.isOnline() && isOpen) {
-            InventoryGUIEventsHander.Instnace().Unregister(this);
-            CreateInventory();
-            RefreshButtons();
+            InventoryGUIEventsHander.Instnace().unregister(this);
+            createInventory();
+            refreshButtons();
             player.openInventory(this.inventory);
-            InventoryGUIEventsHander.Instnace().Register(this);
+            InventoryGUIEventsHander.Instnace().register(this);
         }
     }
 
-    public void SetTitle(String title) {
+    public void setTitle(String title) {
         isTitleSet = true;
         StringBuilder result = new StringBuilder();
         title = "§3§l" + title;
         int title_size = title.length();
-        int start = (max_title_size / 2) - (title_size / 2);
+        int start = (MAX_TITLE_SIZE / 2) - (title_size / 2);
         int l = 0;
         for (int i = 0; i < start + title_size; i++) {
             if (i >= start) {
@@ -159,10 +132,10 @@ public abstract class InventoryGUI {
             } else
                 result.append(" ");
         }
-        this.SetName(result.toString());
+        this.setName(result.toString());
     }
 
-    protected void RefreshButtons() {
+    protected void refreshButtons() {
         Button button = null;
         for (int i = 0; i < buttons.length; i++)
         {
@@ -178,9 +151,9 @@ public abstract class InventoryGUI {
         }
     }
 
-    public void RefreshButton(Button button)
+    public void refreshButton(Button button)
     {
-        int index = GetButtonIndex(button);
+        int index = getButtonIndex(button);
         if(button.IsActive())
         {
             this.inventory.setItem(index, buttons[index]);
@@ -193,104 +166,103 @@ public abstract class InventoryGUI {
 
     }
 
-    public void SetActive(boolean isActive) {
+    public void setActive(boolean isActive) {
         isOpen = isActive;
         if (isOpen)
-            InventoryGUIEventsHander.Instnace().Register(this);
+            InventoryGUIEventsHander.Instnace().register(this);
         else
-            InventoryGUIEventsHander.Instnace().Unregister(this);
+            InventoryGUIEventsHander.Instnace().unregister(this);
     }
 
-    public InventoryGUI SetParent(InventoryGUI parent) {
+    public InventoryGUI setParent(InventoryGUI parent) {
         this.parent = parent;
         return this;
     }
 
-    public Player GetPlayer() {
+    public Player getPlayer() {
         return this.player;
     }
 
-    public InventoryGUI GetParent() {
+    public InventoryGUI getParent() {
         return this.parent;
     }
-    public int GetButtonIndex(Button button)
+    public int getButtonIndex(Button button)
     {
-        return button.GetHeight() * 9 + button.GetWidth() % 9;
+        return button.getHeight() * 9 + button.getWidth() % 9;
     }
-    public Button GetButton(int height, int width) {
+    public Button getButton(int height, int width) {
         int pos = height * 9 + width % 9;
         return buttons[pos] == null ? null : buttons[pos];
     }
-
-    public Button GetButton(int index) {
+    public Button getButton(int index) {
         int position = index >= buttons.length ? buttons.length - 1 : index;
         return buttons[position] == null ? new Button(Material.DIRT) : buttons[position];
     }
-    public ButtonBuilder BuildButton()
+    public ButtonBuilder buildButton()
     {
         return new ButtonBuilder();
     }
 
-    public void AddButton(Button button) {
-        buttons[button.GetHeight() * 9 + button.GetWidth() % 9] = button;
+    public void addButton(Button button) {
+        buttons[button.getHeight() * 9 + button.getWidth() % 9] = button;
     }
 
-    public void AddButton(Button button, int index) {
+    public void addButton(Button button, int index) {
         if (index <=this.size)
             buttons[index] = button;
     }
 
-    public void AddButton(Button button, int height, int width) {
+    public void addButton(Button button, int height, int width) {
         int pos = height * 9 + width % 9;
         if(pos >=0 && pos<this.size)
          buttons[pos] = button;
     }
 
 
-    public void AddButton(Material material, String name, String description, int height, int width, ButtonEvent onClick) {
+    public void addButton(Material material, String name, String description, int height, int width, ButtonEvent onClick) {
         Button gui_button = new Button(material, name, height, width, onClick);
-        gui_button.SetDescription(description);
-        AddButton(gui_button);
+        gui_button.setDescription(description);
+        addButton(gui_button);
     }
 
-    public void SetPlayer(Player player) {
+    public void setPlayer(Player player) {
         this.player = player;
     }
 
 
-    public boolean IsOpen() {
+    public boolean isOpen() {
         return this.isOpen;
     }
 
-    public void EnableLogs(boolean enableLogs) {
+    public void enableLogs(boolean enableLogs) {
         this.enableLogs = enableLogs;
     }
 
-    public boolean IsEnableLogs() {
+    public boolean isEnableLogs() {
          return this.enableLogs;
     }
 
-    public void DisplayLog(String message, ChatColor chatColor) {
+    public void displayLog(String message, ChatColor chatColor) {
         Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.YELLOW + this.toString() + ": " + chatColor + message);
     }
 
-    public void PlaySound(Sound sound)
+    public void playSound(Sound sound)
     {
         player.playSound(player.getLocation(),sound,1,1);
     }
 
-    public void ClearButtons()
+    public void clearButtons()
     {
         Arrays.fill(buttons, null);
-        this.Refresh();
+        this.refresh();
     }
 
-    public int GetSize()
+    public int getSize()
     {
         return this.size;
     }
 
-    public boolean IsSlotEmpty(int index)
+    public boolean isSlotEmpty(int index)
     {
         return buttons[index] == null;
     }

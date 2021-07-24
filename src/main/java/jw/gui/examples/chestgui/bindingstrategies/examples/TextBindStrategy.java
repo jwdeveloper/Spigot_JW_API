@@ -15,12 +15,12 @@ public class TextBindStrategy  extends BindingStrategy<String> {
     }
 
     @Override
-    public void OnClick(Player player, Button button,BindingStrategy<String> bindingStrategy, String currentValue) {
+    public void onClick(Player player, Button button,BindingStrategy<String> bindingStrategy, String currentValue) {
 
     }
 
     @Override
-    public void OnValueChanged(ChestGUI inventoryGUI, Button button, String newValue) {
+    public void onValueChanged(ChestGUI inventoryGUI, Button button, String newValue) {
 
     }
 }

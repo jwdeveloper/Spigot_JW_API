@@ -14,58 +14,58 @@ public class ButtonBuilder<SELF extends ButtonBuilder<SELF>>
         button = new Button(Material.DIRT,ButtonActionsEnum.CLICK);
     }
 
-    public SELF SetPosition(int height,int width)
+    public SELF setPosition(int height,int width)
     {
-        this.button.SetPosition(height,width);
-        return Self();
+        this.button.setPosition(height,width);
+        return self();
     }
-    public SELF SetDescription(String ... description)
+    public SELF setDescription(String ... description)
     {
-        this.button.SetDescription(description);
-        return Self();
+        this.button.setDescription(description);
+        return self();
     }
-    public SELF SetName(String name)
+    public SELF setName(String name)
     {
-        this.button.SetName(name);
-        return Self();
+        this.button.setName(name);
+        return self();
     }
-    public SELF SetMaterial(Material material)
+    public SELF setMaterial(Material material)
     {
         this.button.setMaterial(material);
-        return Self();
+        return self();
     }
-    public SELF SetOnClick(ButtonEvent onClick)
+    public SELF setOnClick(ButtonEvent onClick)
     {
         this.button.setOnClick(onClick);
-        return Self();
+        return self();
     }
-    public SELF SetAcction(ButtonActionsEnum actionsEnum)
+    public SELF setAcction(ButtonActionsEnum actionsEnum)
     {
         this.button.setAction(actionsEnum);
-        return Self();
+        return self();
     }
-    public SELF SetHighlighted(boolean highlighted)
+    public SELF setHighlighted(boolean highlighted)
     {
-        this.button.SetHighlighted(highlighted);
-        return Self();
+        this.button.setHighlighted(highlighted);
+        return self();
     }
-    public SELF SetPermission(String permission)
+    public SELF setPermission(String permission)
     {
-        this.button.SetPermission(permission);
-        return Self();
+        this.button.setPermission(permission);
+        return self();
     }
-    public SELF SetClickSound(Sound sound)
+    public SELF setClickSound(Sound sound)
     {
          this.button.setSound(sound);
-        return Self();
+        return self();
     }
-    public SELF SetActive(boolean isActive)
+    public SELF setActive(boolean isActive)
     {
         this.button.setActive(isActive);
-        return Self();
+        return self();
     }
 
-    protected SELF Self()
+    protected SELF self()
     {
         return (SELF)this;
     }

@@ -15,17 +15,17 @@ public class BoolenBindStrategy extends BindingStrategy<Boolean> {
     }
 
     @Override
-    public void OnClick(Player player, Button button,BindingStrategy<Boolean>  bindingStrategy, Boolean currentValue) {
+    public void onClick(Player player, Button button,BindingStrategy<Boolean>  bindingStrategy, Boolean currentValue) {
         boolean value = getValue();
         setValue(!value);
     }
     @Override
-    public void OnValueChanged(ChestGUI inventoryGUI, Button button, Boolean newValue) {
+    public void onValueChanged(ChestGUI inventoryGUI, Button button, Boolean newValue) {
 
         String description = newValue ?ChatColor.GREEN+""+newValue: ChatColor.RED+""+newValue;
         description = ChatColor.WHITE+""+ChatColor.BOLD+"Enabled: "+ChatColor.RESET+description;
-        button.SetHighlighted(newValue);
-        button.SetDescription(description);
+        button.setHighlighted(newValue);
+        button.setDescription(description);
     }
 
 

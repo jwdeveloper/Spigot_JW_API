@@ -13,8 +13,8 @@ public class BindingStrategy<T> implements ButtonEvent {
     protected ChestGUI chestGUI;
     protected Button button;
     protected BindingField<T> bindingField;
-    public OnChangeEvent<T> onChangeEvent = this::OnValueChanged;
-    public OnClickEvent<T> onClickEvent = this::OnClick;
+    public OnChangeEvent<T> onChangeEvent = this::onValueChanged;
+    public OnClickEvent<T> onClickEvent = this::onClick;
 
     public BindingStrategy(Button button,ChestGUI chestGUI,BindingField<T> bindingField)
     {
@@ -37,19 +37,19 @@ public class BindingStrategy<T> implements ButtonEvent {
              return;
         onClickEvent.OnClick(player, button,this, getValue());
     }
-    public void OnChange(T newValue)
+    public void onChange(T newValue)
     {
-        if(!bindingField.isBinded() || !chestGUI.IsOpen())
+        if(!bindingField.isBinded() || !chestGUI.isOpen())
             return;
 
         onChangeEvent.OnValueChanged(chestGUI, button, newValue);
-        chestGUI.RefreshButton(button);
+        chestGUI.refreshButton(button);
     }
 
-    protected void OnClick(Player player, Button button,BindingStrategy<T> bindingStrategy, T currentValue)
+    protected void onClick(Player player, Button button,BindingStrategy<T> bindingStrategy, T currentValue)
     {
     }
-    protected void OnValueChanged(ChestGUI inventoryGUI, Button button, T newValue)
+    protected void onValueChanged(ChestGUI inventoryGUI, Button button, T newValue)
     {
     }
 
@@ -68,12 +68,12 @@ public class BindingStrategy<T> implements ButtonEvent {
     public void setChestGUI(ChestGUI chestGUI)
     {
         this.chestGUI = chestGUI;
-        chestGUI.AddBindStrategy(this);
+        chestGUI.addBindStrategy(this);
     }
     public void setBindingField(BindingField<T> bindingField)
     {
         this.bindingField = bindingField;
-        this.bindingField.onChange(this::OnChange);
+        this.bindingField.onChange(this::onChange);
     }
     public  T getValue()
     {

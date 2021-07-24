@@ -24,19 +24,19 @@ public class ButtonBuilderChestGUI extends ButtonBuilder<ButtonBuilderChestGUI>
     }
 
     @Override
-    public ButtonBuilderChestGUI Self() {
+    public ButtonBuilderChestGUI self() {
         return this;
     }
 
 
-    public ButtonBuilderChestGUI BindField(BindingStrategy bindingStrTest)
+    public ButtonBuilderChestGUI bindField(BindingStrategy bindingStrTest)
     {
         bindingStrTest.setChestGUI(chestGUI);
         bindingStrTest.setButton(button);
-      return Self();
+      return self();
     }
 
-    public ButtonBuilderChestGUI BindField(BindingField bindingField)
+    public ButtonBuilderChestGUI bindField(BindingField bindingField)
     {
         if(!bindingField.isBinded())
         {
@@ -72,20 +72,19 @@ public class ButtonBuilderChestGUI extends ButtonBuilder<ButtonBuilderChestGUI>
                                         ChatColor.WHITE+bindingField.getType().getTypeName());
                 break;
         }
-        return bindingStrategy == null? Self():BindField(bindingStrategy);
+        return bindingStrategy == null? self():bindField(bindingStrategy);
+    }
+
+    public ButtonBuilderChestGUI setAnimationFrames(Material ... frames)
+    {
+
+        return self();
     }
 
 
-    public ButtonBuilderChestGUI SetAnimationFrames(Material ... frames)
+    public Button buildAndAdd()
     {
-
-        return Self();
-    }
-
-
-    public Button BuildAndAdd()
-    {
-        chestGUI.AddButton(this.button,this.button.GetHeight(),this.button.GetWidth());
+        chestGUI.addButton(this.button,this.button.getHeight(),this.button.getWidth());
         return button;
     }
 

@@ -8,38 +8,39 @@ import java.util.HashMap;
 import java.util.UUID;
 
 public abstract class BetterCommandGUI extends BetterCommand {
-    private HashMap<UUID, InventoryGUI> playersGui = new HashMap<UUID, InventoryGUI>();
+
+    private final HashMap<UUID, InventoryGUI> playersGui = new HashMap<UUID, InventoryGUI>();
 
     public BetterCommandGUI(String name) {
         super(name);
     }
 
-    public abstract InventoryGUI SetInventoryGUI();
+    public abstract InventoryGUI setInventoryGUI();
 
-    public  void Invoke(Player playerSender, String[] args)
+    public void  invoke(Player playerSender, String[] args)
     {
-        this.GetGUI(playerSender).Open(playerSender);
+        this.getGUI(playerSender).open(playerSender);
     }
 
-    public void  Invoke(ConsoleCommandSender serverSender, String[] args)
+    public void  invoke(ConsoleCommandSender serverSender, String[] args)
     {
     }
 
-    public abstract void OnInitialize();
+    public abstract void onInitialize();
 
-    public void CloseGUI() {
+    public void closeGUI() {
         playersGui.forEach((a, b) ->
         {
-            playersGui.get(a).Close();
+            playersGui.get(a).close();
         });
     }
 
-    public InventoryGUI GetGUI(Player player) {
+    public InventoryGUI getGUI(Player player) {
         if (playersGui.containsKey(player.getUniqueId()))
             return playersGui.get(player.getUniqueId());
 
-        InventoryGUI gui = SetInventoryGUI();
-        gui.SetPlayer(player);
+        InventoryGUI gui = setInventoryGUI();
+        gui.setPlayer(player);
         playersGui.put(player.getUniqueId(), gui);
         return gui;
     }

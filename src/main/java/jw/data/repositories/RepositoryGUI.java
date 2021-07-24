@@ -21,22 +21,22 @@ public class RepositoryGUI<T extends Entity> extends ListGUI<T>
     }
 
     @Override
-    public void OnInitialize()
+    public void onInitialize()
     {
         this.onDelete = (player,button) ->
         {
-           T dataModel = button.GetHoldingObject();
+           T dataModel = button.getHoldingObject();
            repositoryGUI.deleteOne(dataModel.id,dataModel);
-           this.Open(player);
+           this.open(player);
         };
 
 
     }
 
     @Override
-    public void OnOpen(Player player)
+    public void onOpen(Player player)
     {
-        this.AddButtons(MapEntityToButtons(repositoryGUI.getMany(null)));
+        this.addButtons(MapEntityToButtons(repositoryGUI.getMany(null)));
     }
 
     private List<Button> MapEntityToButtons(List<T> entityList)
@@ -49,7 +49,7 @@ public class RepositoryGUI<T extends Entity> extends ListGUI<T>
         Button button = new Button(data.icon,data.name,data.description);
         button.setTag(data.id);
         button.setObjectHolder(data);
-        button.SetDescription(ChatColor.GREEN+" "+ChatColor.BOLD+"[ Click to show details ]");
+        button.setDescription(ChatColor.GREEN+" "+ChatColor.BOLD+"[ Click to show details ]");
         return button;
     }
 }

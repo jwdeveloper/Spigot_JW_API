@@ -19,7 +19,7 @@ public class SelectListGUI extends SingleInstanceGUI<ListGUI> {
         Players, Materials, PlayerInventory, File, Block
     }
 
-    public static SelectListGUI Instnace() {
+    public static SelectListGUI instnace() {
         if (Instnace == null) {
             Instnace = new SelectListGUI();
         }
@@ -33,34 +33,34 @@ public class SelectListGUI extends SingleInstanceGUI<ListGUI> {
     @Override
     public ListGUI setGUI() {
         ListGUI listGUI = new ListGUI(null, "GUI list", 6);
-        listGUI.SelectiveMode();
+        listGUI.selectiveMode();
         return listGUI;
     }
 
-    public static ListGUI Get(Player player, String title, ArrayList<Button> items, InventoryEvent acction) {
-        ListGUI gui_list = Instnace().getGUI(player);
-        gui_list.SetName(title);
-        gui_list.SelectItem(acction);
-        gui_list.ClearItems();
-        gui_list.AddButtons(items);
+    public static ListGUI get(Player player, String title, ArrayList<Button> items, InventoryEvent acction) {
+        ListGUI gui_list = instnace().getGUI(player);
+        gui_list.setName(title);
+        gui_list.selectItem(acction);
+        gui_list.clearItems();
+        gui_list.addButtons(items);
         return gui_list;
     }
 
     public static ListGUI Get(Player player, SearchType searchType, InventoryEvent acction) {
-        ListGUI gui_list = Instnace().getGUI(player);
+        ListGUI gui_list = instnace().getGUI(player);
         ArrayList<Button> buttons = new ArrayList<>();
         switch (searchType) {
             case Materials:
-                gui_list.SetName("Select material");
-                gui_list.ClearItems();
-                gui_list.AddButtons(Instnace().GetMaterials());
+                gui_list.setName("Select material");
+                gui_list.clearItems();
+                gui_list.addButtons(instnace().getMaterials());
                 break;
             case Block:
-                gui_list.SetName("Select material");
-                gui_list.ClearItems();
-                gui_list.AddButtons(Instnace().GetMaterials().stream().filter(e ->
+                gui_list.setName("Select material");
+                gui_list.clearItems();
+                gui_list.addButtons(instnace().getMaterials().stream().filter(e ->
                 {
-                    Material material = e.GetHoldingObject();
+                    Material material = e.getHoldingObject();
                     if (material.isBlock())
                         return true;
                     else
@@ -71,9 +71,9 @@ public class SelectListGUI extends SingleInstanceGUI<ListGUI> {
 
             case Players:
 
-                gui_list.SetName("Select player");
-                gui_list.ClearItems();
-                gui_list.AddButtons(Instnace().GetPlayers());
+                gui_list.setName("Select player");
+                gui_list.clearItems();
+                gui_list.addButtons(instnace().getPlayers());
                 break;
             case PlayerInventory:
 
@@ -86,16 +86,16 @@ public class SelectListGUI extends SingleInstanceGUI<ListGUI> {
                         buttons.add(button);
                     }
                 }
-                gui_list.SetName("Select item");
-                gui_list.ClearItems();
-                gui_list.AddButtons(buttons);
+                gui_list.setName("Select item");
+                gui_list.clearItems();
+                gui_list.addButtons(buttons);
                 break;
         }
-        gui_list.SelectItem(acction);
+        gui_list.selectItem(acction);
         return gui_list;
     }
 
-    private ArrayList<Button> GetMaterials() {
+    private ArrayList<Button> getMaterials() {
         if (materials == null) {
             materials = new ArrayList<>();
             Arrays.stream(Material.values()).forEach(material ->
@@ -108,7 +108,7 @@ public class SelectListGUI extends SingleInstanceGUI<ListGUI> {
         return materials;
     }
 
-    private ArrayList<Button> GetPlayers() {
+    private ArrayList<Button> getPlayers() {
         if (players_buttons == null) {
             players_buttons = new ArrayList<>();
             Arrays.stream(Bukkit.getServer().getOfflinePlayers()).forEach(e ->

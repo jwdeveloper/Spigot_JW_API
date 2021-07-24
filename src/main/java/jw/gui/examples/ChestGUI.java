@@ -16,7 +16,14 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 
-public  class  ChestGUI<T> extends InventoryGUI {
+public class ChestGUI<T> extends InventoryGUI {
+
+    public T detail;
+    private Class<T> detailClass;
+    private ArrayList<BindingStrategy> bindingStrategies = new ArrayList<>();
+    private InputGUI guiInput;
+    private boolean isInitialized = false;
+
     public ChestGUI(String name, int size) {
         super(name, size, InventoryType.CHEST);
     }
@@ -29,197 +36,149 @@ public  class  ChestGUI<T> extends InventoryGUI {
         super(parent, name, size, InventoryType.CHEST);
         this.detailClass = detailClass;
     }
-    public T detail;
 
-
-    private Class<T> detailClass;
-    private ArrayList<BindingStrategy> bindingStrategies = new ArrayList<>();
-    private InputGUI guiInput;
-    private boolean isInitialized = false;
 
     @Override
-    public void OnClick(Player player, Button itemStack) {
+    public void onClick(Player player, Button button) {
 
     }
 
     @Override
-    public void OnRefresh(Player player) {
+    public void onRefresh(Player player) {
 
     }
 
     @Override
-    public void OnOpen(Player player) {
+    public void onOpen(Player player) {
 
     }
 
     @Override
-    public void OnClose(Player player) {
+    public void onClose(Player player) {
 
     }
 
-    public void OnClickAtPlayerItem(Player player, ItemStack itemStack) {
+    public void onClickAtPlayerItem(Player player, ItemStack itemStack) {
     }
 
-    public  void OnInitialize()
-    {
-
+    public void onInitialize() {
     }
 
     @Override
-    protected void DoClick(Player player, int index, ItemStack itemStack) {
+    protected void doClick(Player player, int index, ItemStack itemStack) {
         if (index < this.size) {
-            Button button = this.GetButton(index);
-            if (button != null && button.IsActive())
-            {
-                if(button.hasSound())
-                    player.playSound(player.getLocation(),button.getSound(),1,1);
-                if(!button.checkPermission(player))
-                  return;
+            Button button = this.getButton(index);
+            if (button != null && button.IsActive()) {
+                if (button.hasSound())
+                    player.playSound(player.getLocation(), button.getSound(), 1, 1);
+                if (!button.checkPermission(player))
+                    return;
 
                 //Invoke all binded varables events for button
-                for(BindingStrategy bindingStrategy:bindingStrategies)
-                {
-                    if(bindingStrategy.getButton() == button)
-                    {
-                        bindingStrategy.Execute(player,button);
+                for (BindingStrategy bindingStrategy : bindingStrategies) {
+                    if (bindingStrategy.getButton() == button) {
+                        bindingStrategy.Execute(player, button);
                     }
                 }
                 //Invoke button onclick
-                button.getOnClick().Execute(player,button);
-                OnClick(player, button);
+                button.getOnClick().Execute(player, button);
+                onClick(player, button);
             }
         } else {
-            OnClickAtPlayerItem(player, itemStack);
+            onClickAtPlayerItem(player, itemStack);
+        }
+    }
+    @Override
+    public void open(Player player) {
+        initialize();
+        if (detail != null) {
+            refreshBindedButtons();
+        }
+        super.open(player);
+    }
+
+    public void open(Player player, T detail) {
+        this.detail = detail;
+        this.open(player);
+    }
+
+    public void openParent() {
+        if (this.getParent() != null) {
+            this.close();
+            this.getParent().open(player);
+        } else {
+            this.close();
         }
     }
 
-    protected InputGUI CreateInputGUI() {
+    @Override
+    public ButtonBuilderChestGUI buildButton() {
+        return new ButtonBuilderChestGUI(this);
+    }
+
+    protected InputGUI createInputGUI() {
         if (guiInput == null)
             guiInput = new InputGUI("Input", this);
 
         return guiInput;
     }
 
-    protected void Initialize() {
+    protected void initialize() {
         if (!isInitialized) {
             isInitialized = true;
-            this.OnInitialize();
-        }
-
-    }
-
-    public void OpenParent() {
-        if (this.GetParent() != null) {
-            this.Close();
-            this.GetParent().Open(player);
-        } else {
-            this.Close();
+            this.onInitialize();
         }
     }
-
-    @Override
-    public void Open(Player player) {
-        Initialize();
-        if(detail != null)
-        {
-         RefreshBindedButtons();
-        }
-        super.Open(player);
-    }
-
-    @Override
-    public ButtonBuilderChestGUI BuildButton() {
-        return new ButtonBuilderChestGUI(this);
-    }
-
-    public void Open(Player player, T detail) {
-        this.detail = detail;
-        this.Open(player);
-    }
-
-    public void OpenTextInput(String title, String value, InputEvent textEvent) {
-        CreateInputGUI();
-        guiInput.onText = textEvent;
-        guiInput.SetValidation(false);
-        guiInput.SetName(title);
-        guiInput.SetValue(value);
-        guiInput.Open(player);
-    }
-
-    public void OpenTextInput(String title, String value, InputEvent textEvent, InputEvent closeEvent) {
-        CreateInputGUI();
-        guiInput.onText = textEvent;
-        guiInput.onExit = closeEvent;
-        guiInput.SetValidation(false);
-        guiInput.SetName(title);
-        guiInput.SetValue(value);
-        guiInput.Open(player);
-    }
-
-    public void OpenNumberInput(String title, String value, InputEvent textEvent) {
-        CreateInputGUI();
-        guiInput.onText = textEvent;
-        guiInput.SetName(title);
-        guiInput.SetValue(value);
-        guiInput.Open(player);
-    }
-    public void DrawBorder(Material material) {
+    public void drawBorder(Material material) {
         Button button;
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < this.height; j++) {
                 if (i == 0 || j == 0 || j == this.height - 1 || i == 8) {
-                    button = GetButton(j, i);
-                    if (button == null)
-                    {
-                        this.AddButton(ButtonFactory.GetBackground(material), j, i);
-                    } else if (button.GetAction() == ButtonActionsEnum.BACKGROUND || button.GetAction() == ButtonActionsEnum.EMPTY)
-                    {
+                    button = getButton(j, i);
+                    if (button == null) {
+                        this.addButton(ButtonFactory.GetBackground(material), j, i);
+                    } else if (button.getAction() == ButtonActionsEnum.BACKGROUND || button.getAction() == ButtonActionsEnum.EMPTY) {
                         button.setType(material);
                     }
                 }
             }
         }
     }
-    public void FillWithMaterial(Material material)
-    {
+
+    public void FillWithMaterial(Material material) {
         Button button = null;
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < this.height; j++) {
-                     button = GetButton(j, i);
-                    if (button == null)
-                    {
-                        this.AddButton(ButtonFactory.GetBackground(material), j, i);
-                    } else if (button.GetAction() == ButtonActionsEnum.BACKGROUND || button.GetAction() == ButtonActionsEnum.EMPTY)
-                    {
-                        button.setType(material);
-                    }
+                button = getButton(j, i);
+                if (button == null) {
+                    this.addButton(ButtonFactory.GetBackground(material), j, i);
+                } else if (button.getAction() == ButtonActionsEnum.BACKGROUND || button.getAction() == ButtonActionsEnum.EMPTY) {
+                    button.setType(material);
+                }
             }
         }
     }
-
-
     public void AddBackArrow() {
         Button button = ButtonFactory.ExitButton();
-        button.SetPosition(this.height - 1, 8);
-        button.setOnClick((a,b) ->
+        button.setPosition(this.height - 1, 8);
+        button.setOnClick((a, b) ->
         {
-            this.OpenParent();
+            this.openParent();
         });
-        this.AddButton(button);
+        this.addButton(button);
     }
-    public void RefreshBindedButtons()
-    {
-        for (BindingStrategy strategy : bindingStrategies)
-        {
+
+    public void refreshBindedButtons() {
+        for (BindingStrategy strategy : bindingStrategies) {
             strategy.setObject(this.detail);
-            strategy.onChangeEvent.OnValueChanged(this,strategy.getButton(),strategy.getValue());
+            strategy.onChangeEvent.OnValueChanged(this, strategy.getButton(), strategy.getValue());
         }
     }
 
-    public void AddBindStrategy(BindingStrategy bindingStrategy)
-    {
-        if(!this.bindingStrategies.contains(bindingStrategy))
-          this.bindingStrategies.add(bindingStrategy);
+    public void addBindStrategy(BindingStrategy bindingStrategy) {
+        if (!this.bindingStrategies.contains(bindingStrategy))
+            this.bindingStrategies.add(bindingStrategy);
     }
+
 
 }

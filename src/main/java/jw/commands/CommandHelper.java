@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 
 public class CommandHelper
 {
-    public static void InvokeCommand(Player player, String command)
+    public static void invokeCommand(Player player, String command)
     {
 
         if(command.startsWith("[s]"))
@@ -50,7 +50,7 @@ public class CommandHelper
         boolean result  = Bukkit.getServer().dispatchCommand(player, command);
     }
 
-    public static boolean Invoke(Player player, String command)
+    public static boolean invoke(Player player, String command)
     {
 
         if(command == null || command.equals("") || command.equals(" "))

@@ -16,32 +16,32 @@ import java.util.function.Supplier;
 public abstract class BetterCommand extends BukkitCommand {
 
     private BetterCommand parent;
-    private String premission = "";
+    private String permission = "";
     private String noPermissionMessage;
     private boolean permissionSet;
-    private ArrayList<BetterCommand> childs = new ArrayList<>();
-    private HashMap<Integer, Supplier<ArrayList<String>>> tabCompletes = new HashMap<>();
-    private ArrayList<String> empty_tabCompletes = new ArrayList<>();
+    private final ArrayList<BetterCommand> childs = new ArrayList<>();
+    private final HashMap<Integer, Supplier<ArrayList<String>>> tabCompletes = new HashMap<>();
+    private final ArrayList<String> emptyTabCompletes = new ArrayList<>();
     private Consumer<CommandSender> OnNoArguments;
     protected boolean commandResult = true;
     
-    public abstract void Invoke(Player playerSender, String[] args);
+    public abstract void invoke(Player playerSender, String[] args);
 
-    public abstract void Invoke(ConsoleCommandSender serverSender, String[] args);
+    public abstract void invoke(ConsoleCommandSender serverSender, String[] args);
 
-    public abstract void OnInitialize();
+    public abstract void onInitialize();
 
     public BetterCommand(String name, boolean registerCommand) {
         super(name);
         if (registerCommand)
-            RegisterCommands();
-        OnInitialize();
+            registerCommands();
+        onInitialize();
     }
 
     public BetterCommand(String name) {
         super(name);
-        RegisterCommands();
-        OnInitialize();
+        registerCommands();
+        onInitialize();
     }
 
     @Override
@@ -49,7 +49,7 @@ public abstract class BetterCommand extends BukkitCommand {
         BetterCommand target = this;
         String[] arguments = args;
         if (args.length != 0) {
-            BetterCommand child_invoked = target.IsChildInvoked(args);
+            BetterCommand child_invoked = target.isChildinvoked(args);
             if (child_invoked != null) {
                 target = child_invoked;
                 for (int j = 0; j < args.length; j++) {
@@ -61,10 +61,10 @@ public abstract class BetterCommand extends BukkitCommand {
             }
 
         }
-        return target.GetTabCompleter(arguments.length);
+        return target.getTabCompleter(arguments.length);
     }
 
-    public void SetCommandResult(boolean result) {
+    public void setCommandResult(boolean result) {
         this.commandResult = result;
     }
 
@@ -76,7 +76,7 @@ public abstract class BetterCommand extends BukkitCommand {
         if (args.length != 0) {
             //null nie jest najlepszym rozwiazaniem, ale komu by sie chcialo robic opcjonala
             //magia połaczona z rekurencją
-            BetterCommand child_invoked = target.IsChildInvoked(args);
+            BetterCommand child_invoked = target.isChildinvoked(args);
             if (child_invoked != null) {
                 target = child_invoked;
 
@@ -96,20 +96,20 @@ public abstract class BetterCommand extends BukkitCommand {
 
         if (commandSender instanceof Player) {
             //sprawdzanie permisji
-            if (target.permissionSet && !((Player) commandSender).hasPermission(target.premission))
+            if (target.permissionSet && !((Player) commandSender).hasPermission(target.permission))
             {
-                commandSender.sendMessage(target.noPermissionMessage + ": " + target.premission);
+                commandSender.sendMessage(target.noPermissionMessage + ": " + target.permission);
                 return commandResult;
             }
 
-            target.Invoke((Player) commandSender, arguments);
+            target.invoke((Player) commandSender, arguments);
         } else {
-            target.Invoke((ConsoleCommandSender) commandSender, arguments);
+            target.invoke((ConsoleCommandSender) commandSender, arguments);
         }
         return commandResult;
     }
 
-    public String GetMessage(String[] args) {
+    public String getMessage(String[] args) {
         StringBuilder toReturn = new StringBuilder();
         for (String s : args) {
             toReturn.append(s);
@@ -120,14 +120,14 @@ public abstract class BetterCommand extends BukkitCommand {
     }
 
     //rekurencja bejbe
-    public BetterCommand IsChildInvoked(String[] args) {
+    public BetterCommand isChildinvoked(String[] args) {
         BetterCommand result = null;
         for (BetterCommand c : childs) {
             //szukanie komendy wsrod dzieci
             if (args.length > 1) {
                 String[] part = Arrays.copyOfRange(args, 1, args.length);
 
-                result = c.IsChildInvoked(part);
+                result = c.isChildinvoked(part);
 
                 if (result != null) {
                     break;
@@ -142,32 +142,32 @@ public abstract class BetterCommand extends BukkitCommand {
         return result;
     }
 
-    public void AddPermission(String name, String error) {
-        this.premission = name;
+    public void setPermission(String name, String error) {
+        this.permission = name;
         this.noPermissionMessage = error;
         this.permissionSet = true;
     }
 
-    public void AddPermission(String error) {
+    public void setPermission(String error) {
 
         String result = this.getName();
         BetterCommand command = this.parent;
         while (command != null) {
             result = command.getName() + "." + result;
         }
-        this.premission = result;
+        this.permission = result;
         this.noPermissionMessage = error;
         this.permissionSet = true;
     }
 
 
-    public ArrayList<String> GetTabCompleter(int argument) {
+    public ArrayList<String> getTabCompleter(int argument) {
         return tabCompletes.getOrDefault(argument, () -> {
-            return empty_tabCompletes;
+            return emptyTabCompletes;
         }).get();
     }
 
-    public void AddTabCompleter(int argument, String... acction) {
+    public void setTabCompleter(int argument, String... acction) {
         ArrayList<String> complieters = new ArrayList<>();
 
         for (int i = 0; i < acction.length; i++) {
@@ -180,7 +180,7 @@ public abstract class BetterCommand extends BukkitCommand {
     }
 
 
-    public void DisplayChildsName() {
+    public void displaySubCommandsNames() {
         tabCompletes.putIfAbsent(1, () ->
         {
             ArrayList<String> names = new ArrayList<>();
@@ -193,34 +193,34 @@ public abstract class BetterCommand extends BukkitCommand {
         });
     }
 
-    public void SetParent(BetterCommand parent)
+    public void setParent(BetterCommand parent)
     {
         this.parent = parent;
     }
 
-    public void SetNoArgsError(Consumer<CommandSender> acction) {
+    public void setNoArgsError(Consumer<CommandSender> acction) {
         OnNoArguments = acction;
     }
 
-    public void AddTabCompleter(int argument, Supplier<ArrayList<String>> acction) {
+    public void setTabCompleter(int argument, Supplier<ArrayList<String>> acction) {
         tabCompletes.putIfAbsent(argument, acction);
     }
 
-    public void AddChild(BetterCommand child) {
-        child.SetParent(this);
+    public void addChild(BetterCommand child) {
+        child.setParent(this);
         childs.add(child);
     }
     
-    public void AddChild(String name,CommandEvent commandEvent)
+    public void addChild(String name,CommandEvent commandEvent)
     {
-        this.AddChild(new BetterCommandDynamic(name,commandEvent));
+        this.addChild(new BetterSubCommand(name,commandEvent));
     }
     
-    public void RemoveChild(BetterCommand child) {
+    public void removeChild(BetterCommand child) {
         child.parent = null;
         childs.remove(child);
     }
-    public String ConnectArgs(String[] stringArray) {
+    public String connectArgs(String[] stringArray) {
         StringJoiner joiner = new StringJoiner("");
         for (int i = 0; i < stringArray.length; i++) {
             if (i < stringArray.length - 1)
@@ -230,7 +230,7 @@ public abstract class BetterCommand extends BukkitCommand {
         }
         return joiner.toString();
     }
-    private void RegisterCommands() {
+    private void registerCommands() {
         try {
             final Field bukkitCommandMap = Bukkit.getServer().getClass().getDeclaredField("commandMap");
 
