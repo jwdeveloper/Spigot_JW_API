@@ -11,7 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ObjectHelper {
-    public static <T> List<T> GetObjectList(String jsonString, Class<T> cls) {
+    public static <T> List<T> getObjectList(String jsonString, Class<T> cls) {
         List<T> list = new ArrayList<T>();
         try {
             Gson gson = new Gson();
@@ -24,7 +24,7 @@ public class ObjectHelper {
         }
         return list;
     }
-    public static void CopyToObject(Object obj, Object obj2, Class type) {
+    public static void copyToObject(Object obj, Object obj2, Class type) {
         Field[] files = type.getFields();
         for (Field file : files) {
             try {
@@ -36,7 +36,7 @@ public class ObjectHelper {
         }
     }
     @SuppressWarnings("unchecked")
-    public <T> Class<T> GetGenericTypeClass() {
+    public <T> Class<T> getGenericTypeClass() {
         try {
             String className = ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0].getTypeName();
             Class<?> clazz = Class.forName(className);
@@ -45,7 +45,7 @@ public class ObjectHelper {
             throw new IllegalStateException("Class is not parametrized with generic type!!! Please use extends <> ");
         }
     }
-    public static Field FindProperty(String property_name, Class property_type) {
+    public static Field findProperty(String property_name, Class property_type) {
         for (Field f : property_type.getFields()) {
             if (f.getName().contains(property_name)) {
                 return f;
@@ -54,7 +54,7 @@ public class ObjectHelper {
         return null;
     }
 
-    public static <T extends Enum<T>> T EnumToString(Class<T> c, String string) {
+    public static <T extends Enum<T>> T enumToString(Class<T> c, String string) {
         if (c != null && string != null) {
             try {
                 return Enum.valueOf(c, string.trim().toUpperCase());
@@ -65,7 +65,7 @@ public class ObjectHelper {
     }
 
 
-    public static void SetValue(Object obj,String name,Object value){
+    public static void setValue(Object obj,String name,Object value){
         try{
             Field field = obj.getClass().getDeclaredField(name);
             field.setAccessible(true);
@@ -73,7 +73,7 @@ public class ObjectHelper {
         }catch(Exception e){}
     }
 
-    public static Object GetValue(Object obj,String name){
+    public static Object getValue(Object obj,String name){
         Object result=null;
         try{
             Field field = obj.getClass().getDeclaredField(name);

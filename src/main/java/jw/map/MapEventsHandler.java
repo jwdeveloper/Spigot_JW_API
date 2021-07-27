@@ -24,7 +24,7 @@ public class MapEventsHandler implements Listener
 
 
     public MapEventsHandler() {
-        Bukkit.getPluginManager().registerEvents(this, InicializerAPI.GetPlugin());
+        Bukkit.getPluginManager().registerEvents(this, InicializerAPI.getPlugin());
     }
 
     public static MapEventsHandler Instnace() {
@@ -63,7 +63,7 @@ public class MapEventsHandler implements Listener
     @EventHandler
     public void onPluginDisable(PluginDisableEvent pluginDisableEvent)
     {
-        if(pluginDisableEvent.getPlugin() == InicializerAPI.GetPlugin())
+        if(pluginDisableEvent.getPlugin() == InicializerAPI.getPlugin())
         {
             mapDrawers.forEach( (k,v) ->
             {

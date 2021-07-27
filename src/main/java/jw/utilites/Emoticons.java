@@ -33,7 +33,7 @@ public class Emoticons
     public static final String check = "✓";
     public static final String flower = "✿";
 
-    public static  List<String> GetValues()
+    public static  List<String> getValues()
     {
      List<String> result = new ArrayList<>();
      Class<Emoticons> emoticons = Emoticons.class;

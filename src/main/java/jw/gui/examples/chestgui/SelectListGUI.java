@@ -2,6 +2,7 @@ package jw.gui.examples.chestgui;
 
 import jw.InicializerAPI;
 import jw.gui.button.Button;
+import jw.gui.button.ButtonFactory;
 import jw.gui.core.InventoryGUI;
 import jw.gui.events.InventoryEvent;
 import jw.gui.examples.SingleInstanceGUI;
@@ -46,7 +47,7 @@ public class SelectListGUI extends SingleInstanceGUI<ListGUI> {
         return gui_list;
     }
 
-    public static ListGUI Get(Player player, SearchType searchType, InventoryEvent acction) {
+    public static ListGUI get(Player player, SearchType searchType, InventoryEvent acction) {
         ListGUI gui_list = instnace().getGUI(player);
         ArrayList<Button> buttons = new ArrayList<>();
         switch (searchType) {
@@ -81,7 +82,7 @@ public class SelectListGUI extends SingleInstanceGUI<ListGUI> {
                 Button button;
                 for (int i = 0; i < 90; i++) {
                     if (inventory.getItem(i) != null) {
-                        button = Button.fromItemStack(inventory.getItem(i));
+                        button = ButtonFactory.fromItemStack(inventory.getItem(i));
                         button.setObjectHolder(inventory.getItem(i));
                         buttons.add(button);
                     }
@@ -111,13 +112,13 @@ public class SelectListGUI extends SingleInstanceGUI<ListGUI> {
     private ArrayList<Button> getPlayers() {
         if (players_buttons == null) {
             players_buttons = new ArrayList<>();
+
             Arrays.stream(Bukkit.getServer().getOfflinePlayers()).forEach(e ->
             {
                 Button Button = new Button(Material.PLAYER_HEAD, e.getName());
-                Button.setTag(e.getUniqueId().toString());
                 Button.setObjectHolder(e);
                 players_buttons.add(Button);
-                Bukkit.getScheduler().runTask(InicializerAPI.GetPlugin(), () ->
+                Bukkit.getScheduler().runTask(InicializerAPI.getPlugin(), () ->
                 {
                     SkullMeta meta = (SkullMeta) Button.getItemMeta();
                     meta.setOwner(e.getName());
@@ -125,10 +126,7 @@ public class SelectListGUI extends SingleInstanceGUI<ListGUI> {
                 });
             });
         }
-
         return players_buttons;
-
-
     }
 
 }

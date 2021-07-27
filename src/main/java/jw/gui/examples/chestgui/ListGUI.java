@@ -36,165 +36,34 @@ public class ListGUI<T> extends ChestGUI<T> {
     protected List<Button> filteredContent = new ArrayList<>();
     protected List<Button> actionButtons = new ArrayList<>();
 
-    public Material backgroundMaterial = Material.BLACK_STAINED_GLASS_PANE;
-    public ButtonActionsEnum currentAction = ButtonActionsEnum.EMPTY;
+    protected Material backgroundMaterial = Material.BLACK_STAINED_GLASS_PANE;
+    protected ButtonActionsEnum currentAction = ButtonActionsEnum.EMPTY;
 
     protected int maxPages = 1;
     protected int page = 1;
     private int maxItemsOnPage = 7;
 
-    public int getPage() {
-        return this.page;
-    }
-
-    public int getMaxItemsOnPage() {
-        return this.maxItemsOnPage;
-    }
-
     public ListGUI(InventoryGUI parent, String name, int size) {
         super(parent, name, size);
         maxItemsOnPage = 7 * (size - 2);
-        setAcctionButtons();
+        setActionButtons();
     }
 
     public ListGUI(InventoryGUI parent, String name, int size, Class<T> tClass) {
         super(parent, name, size, tClass);
         maxItemsOnPage = 7 * (size - 2);
-        setAcctionButtons();
+        setActionButtons();
     }
-    private void setAcctionButtons() {
+    @Override
+    public void onInitialize() {
 
-        Button exitButton = ButtonFactory.ExitButton();
-        exitButton.setPosition(this.height - 1, 8);
-        exitButton.setOnClick((a,b) ->
-        {
-            cancelAction();
-            this.openParent();
-        });
-        Button search_box = ButtonFactory.SearchButton();
-        search_box.setPosition(0, 0);
-        search_box.setOnClick((a,b) ->
-        {
-            a.sendMessage("Search not implemented yet");
-          /* this.OpenTextInput("Search", "", (x, y) ->
-            {
-                this.Filter_Content(y);
-                SetActionButtonVisibility(ButtonActionsEnum.CANCEL, true);
-                this.Refresh();
-            });*/
-        });
-
-        Button removeButton = ButtonFactory.DeleteButton();
-        removeButton.setPosition(0, 7);
-        removeButton.setOnClick((a,b) ->
-        {
-            currentAction = ButtonActionsEnum.DELETE;
-            setActionButtonVisibility(ButtonActionsEnum.CANCEL, true);
-            this.drawBorder(Material.RED_STAINED_GLASS_PANE);
-
-            if (!isTitleSet)
-                this.setName(this.name + ChatColor.DARK_RED + " [Delete]");
-            else
-                this.refresh();
-        });
-        Button insertbutton = ButtonFactory.InsertButton();
-        insertbutton.setPosition(0, 6);
-        insertbutton.setOnClick((a,b) ->
-        {
-            cancelAction();
-            currentAction = ButtonActionsEnum.INSERT;
-            /*this.openTextInput("Insert", "", (x, y) ->
-            {
-                player.playSound(player.getLocation(), Sound.UI_CARTOGRAPHY_TABLE_TAKE_RESULT, 1, 1);
-                onInsert.accept(y);
-            }, (c, d) ->
-            {
-                currentAction = ButtonActionsEnum.EMPTY;
-            });*/
-        });
-        Button editButton = ButtonFactory.EditButton();
-        editButton.setPosition(0, 7);
-        editButton.setOnClick((a,b) ->
-        {
-            currentAction = ButtonActionsEnum.EDIT;
-            setActionButtonVisibility(ButtonActionsEnum.CANCEL, true);
-            this.drawBorder(Material.YELLOW_STAINED_GLASS_PANE);
-
-            if (!isTitleSet)
-                this.setName(this.name + ChatColor.YELLOW + " [Edit]");
-            else
-                this.refresh();
-        });
-
-        Button copyButton = ButtonFactory.CopyButton();
-        copyButton.setPosition(0, 5);
-        copyButton.setOnClick((a,b) ->
-        {
-            currentAction = ButtonActionsEnum.COPY;
-            setActionButtonVisibility(ButtonActionsEnum.CANCEL, true);
-            this.drawBorder(Material.LIME_STAINED_GLASS_PANE);
-
-            if (!isTitleSet)
-                this.setName(this.name + ChatColor.DARK_GREEN + " [Copy]");
-            else
-                this.refresh();
-
-        });
-
-        Button cancelButton = ButtonFactory.CancelButton();
-        cancelButton.setPosition(this.height - 1, 4);
-        cancelButton.setOnClick((a,b) ->
-        {
-            a.playSound(a.getLocation(), Sound.UI_TOAST_OUT, 1, 1);
-            cancelAction();
-            this.addButtons(this.content);
-            this.refresh();
-        });
-
-        Button left_arrow = ButtonFactory.BackButton(PotionType.SLOWNESS);
-        left_arrow.setPosition(this.height - 1, 3);
-        left_arrow.setOnClick((a,b) ->
-        {
-            a.playSound(a.getLocation(), Sound.BLOCK_SNOW_BREAK, 1, 1);
-            this.backPage();
-            this.refresh();
-        });
-
-        Button right_arrow = ButtonFactory.NextButton(PotionType.SLOWNESS);
-        right_arrow.setPosition(this.height - 1, 5);
-        right_arrow.setOnClick((a,b) ->
-        {
-            a.playSound(a.getLocation(), Sound.BLOCK_SNOW_BREAK, 1, 1);
-            this.nextPage();
-            this.refresh();
-        });
-
-        this.actionButtons.add(exitButton);
-        this.actionButtons.add(search_box);
-        this.actionButtons.add(removeButton);
-        this.actionButtons.add(insertbutton);
-        this.actionButtons.add(copyButton);
-        this.actionButtons.add(cancelButton);
-        this.actionButtons.add(left_arrow);
-        this.actionButtons.add(right_arrow);
-        this.actionButtons.add(editButton);
-
-
-        for (Button button:actionButtons)
-        {
-            this.addButton(button);
-        }
-        setActionButtonVisibility(ButtonActionsEnum.CANCEL, false);
-        this.drawBorder(backgroundMaterial);
     }
-
 
     @Override
     public void onClick(Player player, Button button) {
         if (button.getAction() == ButtonActionsEnum.CLICK) {
             switch (this.currentAction)
             {
-
                 case EDIT:
                     player.playSound(player.getLocation(), Sound.UI_TOAST_IN, 1, 1);
                     this.onEdit.Execute(player, button);
@@ -228,6 +97,132 @@ public class ListGUI<T> extends ChestGUI<T> {
                     break;
             }
         }
+    }
+
+    private void setActionButtons() {
+
+        Button exitButton = ButtonFactory.exitButton();
+        exitButton.setPosition(this.height - 1, 8);
+        exitButton.setOnClick((a,b) ->
+        {
+            cancelAction();
+            this.openParent();
+        });
+        Button search_box = ButtonFactory.searchButton();
+        search_box.setPosition(0, 0);
+        search_box.setOnClick((a,b) ->
+        {
+            a.sendMessage("Search not implemented yet");
+          /* this.OpenTextInput("Search", "", (x, y) ->
+            {
+                this.Filter_Content(y);
+                SetActionButtonVisibility(ButtonActionsEnum.CANCEL, true);
+                this.Refresh();
+            });*/
+        });
+
+        Button removeButton = ButtonFactory.deleteButton();
+        removeButton.setPosition(0, 7);
+        removeButton.setOnClick((a,b) ->
+        {
+            currentAction = ButtonActionsEnum.DELETE;
+            setActionButtonVisibility(ButtonActionsEnum.CANCEL, true);
+            this.drawBorder(Material.RED_STAINED_GLASS_PANE);
+
+            if (!isTitleSet)
+                this.setName(this.name + ChatColor.DARK_RED + " [Delete]");
+            else
+                this.refresh();
+        });
+        Button insertbutton = ButtonFactory.insertButton();
+        insertbutton.setPosition(0, 6);
+        insertbutton.setOnClick((a,b) ->
+        {
+            cancelAction();
+            currentAction = ButtonActionsEnum.INSERT;
+            /*this.openTextInput("Insert", "", (x, y) ->
+            {
+                player.playSound(player.getLocation(), Sound.UI_CARTOGRAPHY_TABLE_TAKE_RESULT, 1, 1);
+                onInsert.accept(y);
+            }, (c, d) ->
+            {
+                currentAction = ButtonActionsEnum.EMPTY;
+            });*/
+        });
+        Button editButton = ButtonFactory.editButton();
+        editButton.setPosition(0, 7);
+        editButton.setOnClick((a,b) ->
+        {
+            currentAction = ButtonActionsEnum.EDIT;
+            setActionButtonVisibility(ButtonActionsEnum.CANCEL, true);
+            this.drawBorder(Material.YELLOW_STAINED_GLASS_PANE);
+
+            if (!isTitleSet)
+                this.setName(this.name + ChatColor.YELLOW + " [Edit]");
+            else
+                this.refresh();
+        });
+
+        Button copyButton = ButtonFactory.copyButton();
+        copyButton.setPosition(0, 5);
+        copyButton.setOnClick((a,b) ->
+        {
+            currentAction = ButtonActionsEnum.COPY;
+            setActionButtonVisibility(ButtonActionsEnum.CANCEL, true);
+            this.drawBorder(Material.LIME_STAINED_GLASS_PANE);
+
+            if (!isTitleSet)
+                this.setName(this.name + ChatColor.DARK_GREEN + " [Copy]");
+            else
+                this.refresh();
+
+        });
+
+        Button cancelButton = ButtonFactory.cancelButton();
+        cancelButton.setPosition(this.height - 1, 4);
+        cancelButton.setOnClick((a,b) ->
+        {
+            a.playSound(a.getLocation(), Sound.UI_TOAST_OUT, 1, 1);
+            cancelAction();
+            this.addButtons(this.content);
+            this.refresh();
+        });
+
+        Button left_arrow = ButtonFactory.BackButton(PotionType.SLOWNESS);
+        left_arrow.setPosition(this.height - 1, 3);
+        left_arrow.setOnClick((a,b) ->
+        {
+            a.playSound(a.getLocation(), Sound.BLOCK_SNOW_BREAK, 1, 1);
+            this.backPage();
+            this.refresh();
+        });
+
+        Button right_arrow = ButtonFactory.nextButton(PotionType.SLOWNESS);
+        right_arrow.setPosition(this.height - 1, 5);
+        right_arrow.setOnClick((a,b) ->
+        {
+            a.playSound(a.getLocation(), Sound.BLOCK_SNOW_BREAK, 1, 1);
+            this.nextPage();
+            this.refresh();
+        });
+
+        this.actionButtons.add(exitButton);
+        this.actionButtons.add(search_box);
+        this.actionButtons.add(removeButton);
+        this.actionButtons.add(insertbutton);
+        this.actionButtons.add(copyButton);
+        this.actionButtons.add(cancelButton);
+        this.actionButtons.add(left_arrow);
+        this.actionButtons.add(right_arrow);
+        this.actionButtons.add(editButton);
+
+
+        for (Button button:actionButtons)
+        {
+            this.addButton(button);
+        }
+        setActionButtonVisibility(ButtonActionsEnum.CANCEL, false);
+        this.drawBorder(backgroundMaterial);
     }
 
     public void selectItem(InventoryEvent onSelect) {
@@ -264,7 +259,7 @@ public class ListGUI<T> extends ChestGUI<T> {
                 if (value) {
                     this.addButton(actionButton);
                 } else {
-                    this.addButton(ButtonFactory.GetBackground(
+                    this.addButton(ButtonFactory.getBackground(
                             this.backgroundMaterial),
                             actionButton.getHeight(),
                             actionButton.getWidth());
@@ -280,7 +275,7 @@ public class ListGUI<T> extends ChestGUI<T> {
                 return actionButton;
             }
         }
-        return ButtonFactory.EmptyButton();
+        return ButtonFactory.emptyButton();
     }
 
     public void selectiveMode() {
@@ -289,7 +284,7 @@ public class ListGUI<T> extends ChestGUI<T> {
         setActionButtonVisibility(ButtonActionsEnum.DELETE, false);
     }
 
-    private void FileterContent(String value) {
+    private void fileterContent(String value) {
 
         if (value == null) {
 
@@ -327,6 +322,7 @@ public class ListGUI<T> extends ChestGUI<T> {
         this.filteredContent = new ArrayList<>();
         openPage(page);
     }
+
     public void nextPage() {
         if (this.page + 1 <= this.maxPages) {
             this.page += 1;
@@ -340,6 +336,7 @@ public class ListGUI<T> extends ChestGUI<T> {
             openPage(this.page);
         }
     }
+
     public void openPage(int page) {
         List<Button> content_to_show = this.filteredContent.size() == 0 ? this.content : this.filteredContent;
 
@@ -362,4 +359,11 @@ public class ListGUI<T> extends ChestGUI<T> {
         setPageName();
     }
 
+    public int getPage() {
+        return this.page;
+    }
+
+    public int getMaxItemsOnPage() {
+        return this.maxItemsOnPage;
+    }
 }

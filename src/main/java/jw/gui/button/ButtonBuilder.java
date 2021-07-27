@@ -13,7 +13,10 @@ public class ButtonBuilder<SELF extends ButtonBuilder<SELF>>
     {
         button = new Button(Material.DIRT,ButtonActionsEnum.CLICK);
     }
-
+    protected SELF self()
+    {
+        return (SELF)this;
+    }
     public SELF setPosition(int height,int width)
     {
         this.button.setPosition(height,width);
@@ -65,12 +68,7 @@ public class ButtonBuilder<SELF extends ButtonBuilder<SELF>>
         return self();
     }
 
-    protected SELF self()
-    {
-        return (SELF)this;
-    }
-
-    public Button Build()
+    public Button build()
     {
         return button;
     }

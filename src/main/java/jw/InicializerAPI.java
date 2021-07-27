@@ -7,12 +7,12 @@ public final class InicializerAPI
 {
     private  static  Plugin plugin;
 
-    public static Plugin GetPlugin()
+    public static Plugin getPlugin()
     {
         return  plugin;
     }
 
-    public static void AttachePlugin(Plugin plugin)
+    public static void attachePlugin(Plugin plugin)
     {
         InicializerAPI.plugin = plugin;
         InventoryGUIEventsHander.Instnace();

@@ -41,13 +41,12 @@ public class RepositoryGUI<T extends Entity> extends ListGUI<T>
 
     private List<Button> MapEntityToButtons(List<T> entityList)
     {
-        return entityList.stream().map(this::MapDataToButton).collect(Collectors.toList());
+        return entityList.stream().map(this::mapDataToButton).collect(Collectors.toList());
     }
 
-    public Button MapDataToButton(T data)
+    public Button mapDataToButton(T data)
     {
         Button button = new Button(data.icon,data.name,data.description);
-        button.setTag(data.id);
         button.setObjectHolder(data);
         button.setDescription(ChatColor.GREEN+" "+ChatColor.BOLD+"[ Click to show details ]");
         return button;

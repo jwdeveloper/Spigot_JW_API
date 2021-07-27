@@ -19,15 +19,15 @@ public abstract class BetterCommand extends BukkitCommand {
     private String permission = "";
     private String noPermissionMessage;
     private boolean permissionSet;
-    private final ArrayList<BetterCommand> childs = new ArrayList<>();
+    private final ArrayList<BetterCommand> children = new ArrayList<>();
     private final HashMap<Integer, Supplier<ArrayList<String>>> tabCompletes = new HashMap<>();
     private final ArrayList<String> emptyTabCompletes = new ArrayList<>();
     private Consumer<CommandSender> OnNoArguments;
     protected boolean commandResult = true;
     
-    public abstract void invoke(Player playerSender, String[] args);
+    public abstract void onInvoke(Player playerSender, String[] args);
 
-    public abstract void invoke(ConsoleCommandSender serverSender, String[] args);
+    public abstract void onInvoke(ConsoleCommandSender serverSender, String[] args);
 
     public abstract void onInitialize();
 
@@ -102,9 +102,9 @@ public abstract class BetterCommand extends BukkitCommand {
                 return commandResult;
             }
 
-            target.invoke((Player) commandSender, arguments);
+            target.onInvoke((Player) commandSender, arguments);
         } else {
-            target.invoke((ConsoleCommandSender) commandSender, arguments);
+            target.onInvoke((ConsoleCommandSender) commandSender, arguments);
         }
         return commandResult;
     }
@@ -122,7 +122,7 @@ public abstract class BetterCommand extends BukkitCommand {
     //rekurencja bejbe
     public BetterCommand isChildinvoked(String[] args) {
         BetterCommand result = null;
-        for (BetterCommand c : childs) {
+        for (BetterCommand c : children) {
             //szukanie komendy wsrod dzieci
             if (args.length > 1) {
                 String[] part = Arrays.copyOfRange(args, 1, args.length);
@@ -185,7 +185,7 @@ public abstract class BetterCommand extends BukkitCommand {
         {
             ArrayList<String> names = new ArrayList<>();
 
-            this.childs.forEach(c -> {
+            this.children.forEach(c -> {
                 names.add(c.getName());
             });
 
@@ -208,7 +208,7 @@ public abstract class BetterCommand extends BukkitCommand {
 
     public void addChild(BetterCommand child) {
         child.setParent(this);
-        childs.add(child);
+        children.add(child);
     }
     
     public void addChild(String name,CommandEvent commandEvent)
@@ -218,9 +218,9 @@ public abstract class BetterCommand extends BukkitCommand {
     
     public void removeChild(BetterCommand child) {
         child.parent = null;
-        childs.remove(child);
+        children.remove(child);
     }
-    public String connectArgs(String[] stringArray) {
+    protected String connectArgs(String[] stringArray) {
         StringJoiner joiner = new StringJoiner("");
         for (int i = 0; i < stringArray.length; i++) {
             if (i < stringArray.length - 1)

@@ -9,15 +9,15 @@ import java.util.UUID;
 
 public abstract class SingleInstanceGUI<T extends InventoryGUI>
 {
-    protected HashMap<UUID, T> guiHashMap = new HashMap<>();
+    protected HashMap<UUID, T> playersGUI = new HashMap<>();
 
     public T getGUI(Player player) {
-        if (guiHashMap.containsKey(player.getUniqueId()))
-            return guiHashMap.get(player.getUniqueId());
+        if (playersGUI.containsKey(player.getUniqueId()))
+            return playersGUI.get(player.getUniqueId());
 
         T gui = setGUI();
         gui.setPlayer(player);
-        guiHashMap.put(player.getUniqueId(), gui);
+        playersGUI.put(player.getUniqueId(), gui);
         return gui;
     }
 

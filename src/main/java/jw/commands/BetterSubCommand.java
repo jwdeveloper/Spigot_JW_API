@@ -20,12 +20,12 @@ public class BetterSubCommand extends BetterCommand
         this.runByConsle = runByConsle;
     }
     @Override
-    public void invoke(Player playerSender, String[] args) {
+    public void onInvoke(Player playerSender, String[] args) {
         commandEvent.execute(playerSender,args);
     }
 
     @Override
-    public void invoke(ConsoleCommandSender serverSender, String[] args) {
+    public void onInvoke(ConsoleCommandSender serverSender, String[] args) {
        if(this.runByConsle)
         commandEvent.execute(null,args);
     }

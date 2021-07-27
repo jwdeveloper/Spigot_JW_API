@@ -23,15 +23,15 @@ public abstract class RepositoryManager
         this.path = path;
     }
 
-    public void AddRepository(Repository repository)
+    public void addRepository(Repository repository)
     {
         repositories.add(repository);
     }
-    public void AddObject(Object obj)
+    public void addSignleObject(Object obj)
     {
         objects.add(obj);
     }
-    public void Load()
+    public void load()
     {
         for (Repository repository : repositories) {
             repository.loadData();
@@ -40,11 +40,14 @@ public abstract class RepositoryManager
         {
             try
             {
-                Object  loaded_object= JsonFileHelper.load(path,this.objects.get(i).getClass().getSimpleName(),this.objects.get(i).getClass());
+                Object  loaded_object= JsonFileHelper.load(
+                        path,
+                        this.objects.get(i).getClass().getSimpleName(),
+                        this.objects.get(i).getClass());
 
                 if(loaded_object != null)
                 {
-                    ObjectHelper.CopyToObject(loaded_object,objects.get(i),loaded_object.getClass());
+                    ObjectHelper.copyToObject(loaded_object,objects.get(i),loaded_object.getClass());
                 }
 
             }
@@ -54,7 +57,7 @@ public abstract class RepositoryManager
             }
         }
     }
-    public void Save()
+    public void save()
     {
         for (Repository repository : repositories)
         {

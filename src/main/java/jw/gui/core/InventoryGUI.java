@@ -38,9 +38,8 @@ public abstract class InventoryGUI {
     protected abstract void doClick(Player player, int index, ItemStack itemStack);
 
     protected InventoryGUI(String name, int height, InventoryType type) {
-        this.height = Math.min(height, 6);
         this.name = name;
-        this.size = height * 9;
+        this.size =this.calculateSize(height);
         this.buttons = new Button[this.size];
         this.inventoryType = type;
         this.displayedName = name;
@@ -51,23 +50,24 @@ public abstract class InventoryGUI {
         this.parent = parent;
     }
 
-    private void createInventory() {
+    protected Inventory createInventory(InventoryType inventoryType) {
         switch (inventoryType) {
             case CHEST:
-                this.inventory = Bukkit.createInventory(player, size, this.displayedName);
-                break;
+              return Bukkit.createInventory(player, size, this.displayedName);
             case MERCHANT:
-                //  this.inventory= player.openMerchant(Bukkit.createMerchant(this.displayedName),true).getTopInventory();
-                break;
+                return inventory;
             case ANVIL:
-                this.inventory = Bukkit.createInventory(player, InventoryType.ANVIL, this.displayedName);
                 this.size = InventoryType.ANVIL.getDefaultSize();
-                break;
-            default:
-                this.inventory = Bukkit.createInventory(player, this.inventoryType, this.displayedName);
-                break;
+                return Bukkit.createInventory(player, InventoryType.ANVIL, this.displayedName);
         }
+        return Bukkit.createInventory(player, this.inventoryType, this.displayedName);
     }
+    protected int calculateSize(int height)
+    {
+        this.height = Math.min(height, 6);
+        return height * 9;
+    }
+
     public void open(Player player) {
         if (parent != null) {
             parent.close();
@@ -77,7 +77,7 @@ public abstract class InventoryGUI {
 
         if (player != null && this.player.isOnline()) {
             this.onOpen(this.player);
-            createInventory();
+            this.inventory = createInventory(inventoryType);
             refreshButtons();
             InventoryGUIEventsHander.Instnace().register(this);
             player.openInventory(this.inventory);
@@ -111,7 +111,7 @@ public abstract class InventoryGUI {
         this.displayedName = name;
         if (player != null && player.isOnline() && isOpen) {
             InventoryGUIEventsHander.Instnace().unregister(this);
-            createInventory();
+            this.inventory = createInventory(inventoryType);
             refreshButtons();
             player.openInventory(this.inventory);
             InventoryGUIEventsHander.Instnace().register(this);
@@ -140,7 +140,7 @@ public abstract class InventoryGUI {
         for (int i = 0; i < buttons.length; i++)
         {
             button = buttons[i];
-            if(button != null && button.IsActive())
+            if(button != null && button.isActive())
             {
                 this.inventory.setItem(i,button);
             }
@@ -154,7 +154,7 @@ public abstract class InventoryGUI {
     public void refreshButton(Button button)
     {
         int index = getButtonIndex(button);
-        if(button.IsActive())
+        if(button.isActive())
         {
             this.inventory.setItem(index, buttons[index]);
         }
@@ -236,6 +236,11 @@ public abstract class InventoryGUI {
 
     public void enableLogs(boolean enableLogs) {
         this.enableLogs = enableLogs;
+    }
+
+    public InventoryType getType()
+    {
+        return inventoryType;
     }
 
     public boolean isEnableLogs() {

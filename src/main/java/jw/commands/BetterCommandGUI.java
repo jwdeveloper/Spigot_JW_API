@@ -17,13 +17,14 @@ public abstract class BetterCommandGUI extends BetterCommand {
 
     public abstract InventoryGUI setInventoryGUI();
 
-    public void  invoke(Player playerSender, String[] args)
+    public void onInvoke(Player playerSender, String[] args)
     {
         this.getGUI(playerSender).open(playerSender);
     }
 
-    public void  invoke(ConsoleCommandSender serverSender, String[] args)
+    public void onInvoke(ConsoleCommandSender serverSender, String[] args)
     {
+
     }
 
     public abstract void onInitialize();

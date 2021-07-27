@@ -16,7 +16,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 
-public class ChestGUI<T> extends InventoryGUI {
+public abstract class ChestGUI<T> extends InventoryGUI {
 
     public T detail;
     private Class<T> detailClass;
@@ -37,6 +37,8 @@ public class ChestGUI<T> extends InventoryGUI {
         this.detailClass = detailClass;
     }
 
+
+    public abstract void onInitialize();
 
     @Override
     public void onClick(Player player, Button button) {
@@ -61,14 +63,13 @@ public class ChestGUI<T> extends InventoryGUI {
     public void onClickAtPlayerItem(Player player, ItemStack itemStack) {
     }
 
-    public void onInitialize() {
-    }
+
 
     @Override
     protected void doClick(Player player, int index, ItemStack itemStack) {
         if (index < this.size) {
             Button button = this.getButton(index);
-            if (button != null && button.IsActive()) {
+            if (button != null && button.isActive()) {
                 if (button.hasSound())
                     player.playSound(player.getLocation(), button.getSound(), 1, 1);
                 if (!button.checkPermission(player))
@@ -136,7 +137,7 @@ public class ChestGUI<T> extends InventoryGUI {
                 if (i == 0 || j == 0 || j == this.height - 1 || i == 8) {
                     button = getButton(j, i);
                     if (button == null) {
-                        this.addButton(ButtonFactory.GetBackground(material), j, i);
+                        this.addButton(ButtonFactory.getBackground(material), j, i);
                     } else if (button.getAction() == ButtonActionsEnum.BACKGROUND || button.getAction() == ButtonActionsEnum.EMPTY) {
                         button.setType(material);
                     }
@@ -145,21 +146,21 @@ public class ChestGUI<T> extends InventoryGUI {
         }
     }
 
-    public void FillWithMaterial(Material material) {
+    public void fillWithMaterial(Material material) {
         Button button = null;
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < this.height; j++) {
                 button = getButton(j, i);
                 if (button == null) {
-                    this.addButton(ButtonFactory.GetBackground(material), j, i);
+                    this.addButton(ButtonFactory.getBackground(material), j, i);
                 } else if (button.getAction() == ButtonActionsEnum.BACKGROUND || button.getAction() == ButtonActionsEnum.EMPTY) {
                     button.setType(material);
                 }
             }
         }
     }
-    public void AddBackArrow() {
-        Button button = ButtonFactory.ExitButton();
+    public void addBackArrow() {
+        Button button = ButtonFactory.exitButton();
         button.setPosition(this.height - 1, 8);
         button.setOnClick((a, b) ->
         {

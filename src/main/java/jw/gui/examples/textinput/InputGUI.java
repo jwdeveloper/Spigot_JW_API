@@ -61,7 +61,7 @@ public class InputGUI {
 
             @Override
             public void onAnvilClick(AnivalGUIOld.AnvilClickEvent e) {
-                Bukkit.getScheduler().runTask(InicializerAPI.GetPlugin(), () ->
+                Bukkit.getScheduler().runTask(InicializerAPI.getPlugin(), () ->
                 {
 
                     if (e.getSlot() == AnivalGUIOld.AnvilSlot.OUTPUT && e.hasText()) {
@@ -92,7 +92,7 @@ public class InputGUI {
 
         guiTextinput.setSlot(AnivalGUIOld.AnvilSlot.INPUT_LEFT, new Button(Material.NAME_TAG, ChatColor.BLACK + ChatColor.stripColor(displayed_text)));
         guiTextinput.setSlot(AnivalGUIOld.AnvilSlot.OUTPUT, new Button(Material.NAME_TAG, displayed_text));
-        Bukkit.getScheduler().runTask(InicializerAPI.GetPlugin(), () ->
+        Bukkit.getScheduler().runTask(InicializerAPI.getPlugin(), () ->
         {
             guiTextinput.open(name);
         });

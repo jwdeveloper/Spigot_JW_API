@@ -16,7 +16,6 @@ public class BindingField<T> implements Bindable<T> {
     private Class _class;
     private Class fieldType;
     private boolean isBinded;
-
     private List<Consumer<T>> onChange = new ArrayList<>();
 
     public BindingField(String filed, Object classObject) {
@@ -60,7 +59,7 @@ public class BindingField<T> implements Bindable<T> {
     public void setAsync(T value) {
         if (!isBinded)
             return;
-        Bukkit.getScheduler().runTask(InicializerAPI.GetPlugin(), () ->
+        Bukkit.getScheduler().runTask(InicializerAPI.getPlugin(), () ->
         {
             try {
                 field.set(object, value);

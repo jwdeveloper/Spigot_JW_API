@@ -20,7 +20,7 @@ public class MaterialBindStrategy extends BindingStrategy<Material> {
     @Override
     public void onClick(Player player, Button button,BindingStrategy<Material> bindingStrategy, Material currentValue)
     {
-        SelectListGUI.Get(player, SelectListGUI.SearchType.Materials, (player1, button1) ->
+        SelectListGUI.get(player, SelectListGUI.SearchType.Materials, (player1, button1) ->
         {
             setValue(button1.getHoldingObject());
             this.chestGUI.open(player1);

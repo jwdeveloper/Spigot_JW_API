@@ -25,7 +25,7 @@ import java.util.HashMap;
 
 public class AnivalGUIOld {
 
-    private Plugin plugin = InicializerAPI.GetPlugin();
+    private Plugin plugin = InicializerAPI.getPlugin();
 
     private boolean colorrename = true;
 

@@ -23,12 +23,12 @@ public interface FileHelper {
     }
 
     static String pluginPath() {
-        return FileHelper.serverPath() + File.separator + "plugins" + File.separator + InicializerAPI.GetPlugin().getName() ;
+        return FileHelper.serverPath() + File.separator + "plugins" + File.separator + InicializerAPI.getPlugin().getName() ;
     }
     static String pluginsPath() {
         return FileHelper.serverPath() + File.separator + "plugins";
     }
-     static boolean isPathExists(String path) {
+    static boolean isPathExists(String path) {
         return new File(path).exists();
     }
 

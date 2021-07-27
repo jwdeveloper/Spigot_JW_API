@@ -9,88 +9,87 @@ import java.util.function.Consumer;
 
 public class TaskTimer
 {
-    public interface  I_Task
+    public interface TaskAction
     {
          void execute(int time, TaskTimer taskTimer);
     }
 
-    I_Task task;
-
-    private Consumer<TaskTimer> onstop;
+    private TaskAction task;
+    private Consumer<TaskTimer> onStop;
     private int speed =20;
     private int time = 0;
-    private int stopAfter = 99999999;
     private int runAfter = 0;
+    private int stopAfter = 99999999;
     private  boolean isCancel = false;
     private  BukkitTask taskId ;
-    public TaskTimer(int tick,I_Task task)
+    public TaskTimer(int tick,TaskAction action)
     {
         this.speed = tick;
-        this.task = task;
+        this.task = action;
     }
 
-    public void Stop()
+    public void stop()
     {
         if(taskId!=null)
             taskId.cancel();
     }
 
-
-    public void Cancel()
+    public void cancel()
     {
         isCancel =true;
     }
-    public TaskTimer StartAfter(int i)
+
+    public TaskTimer startAfter(int i)
     {
         this.runAfter = i;
         return this;
     }
 
-    public TaskTimer StopAfter(int i)
+    public TaskTimer stopAfter(int i)
     {
         this.stopAfter = i;
         return this;
     }
-    public TaskTimer OnStop(Consumer<TaskTimer> task)
+    public TaskTimer onStop(Consumer<TaskTimer> nextTask)
     {
-        this.onstop = task;
+        this.onStop = nextTask;
         return this;
     }
 
 
-    public void RunAgain()
+    public void runAgain()
     {
         this.time = 0;
         this.isCancel = false;
     }
 
 
-    public void RunAsync()
+    public void runAsync()
     {
-        taskId= Bukkit.getScheduler().runTaskTimerAsynchronously(InicializerAPI.GetPlugin(),()->
+        taskId= Bukkit.getScheduler().runTaskTimerAsynchronously(InicializerAPI.getPlugin(),()->
         {
             if(time>=stopAfter || isCancel)
             {
-                if(this.onstop!=null)
-                    this.onstop.accept(null);
+                if(this.onStop!=null)
+                    this.onStop.accept(null);
 
-                Stop();
+                stop();
                 return;
             }
             task.execute(time,this);
             time++;
         },runAfter,speed);
     }
-    public void Run()
+    public void run()
     {
-        taskId= Bukkit.getScheduler().runTaskTimer(InicializerAPI.GetPlugin(),()->
+        taskId= Bukkit.getScheduler().runTaskTimer(InicializerAPI.getPlugin(),()->
         {
             if(time>=stopAfter || isCancel)
             {
-                if(this.onstop!=null)
-                    this.onstop.accept(null);
+                if(this.onStop!=null)
+                    this.onStop.accept(null);
 
-                Stop();
+                stop();
                 return;
             }
             task.execute(time,this);

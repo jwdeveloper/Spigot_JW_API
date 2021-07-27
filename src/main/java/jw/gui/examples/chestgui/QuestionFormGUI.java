@@ -9,27 +9,54 @@ import java.util.function.Consumer;
 
 public class QuestionFormGUI extends SingleInstanceGUI<ChestGUI> {
 
-    public static QuestionFormGUI Instance() {
-        if (Instance == null) {
-            Instance = new QuestionFormGUI();
+    public static QuestionFormGUI instance() {
+        if (instance == null) {
+            instance = new QuestionFormGUI();
         }
-        return Instance;
+        return instance;
     }
 
-    private static QuestionFormGUI Instance;
+    private static QuestionFormGUI instance;
 
 
     @Override
     public ChestGUI setGUI() {
-        ChestGUI chestGUI = new ChestGUI(null, "Select", 4);
-        chestGUI.FillWithMaterial(Material.GRAY_STAINED_GLASS_PANE);
+        ChestGUI chestGUI = new ChestGUI(null, "Select", 4)
+        {
+            @Override
+            public void onInitialize()
+            {
+                this.fillWithMaterial(Material.GRAY_STAINED_GLASS_PANE);
+                this.buildButton()
+                        .setName("Accept")
+                        .setPosition(2,4)
+                        .setMaterial(Material.GREEN_STAINED_GLASS_PANE)
+                        .setOnClick((player1, button) ->
+                        {
+
+                        }).buildAndAdd();
+                this.buildButton()
+                        .setName("Denay")
+                        .setPosition(2,2)
+                        .setMaterial(Material.GREEN_STAINED_GLASS_PANE)
+                        .setOnClick((player1, button) ->
+                        {
+
+                        }).buildAndAdd();
+            }
+            @Override
+            public void onClose(Player player)
+            {
+                this.getParent().open(player);
+            }
+        };
 
         return chestGUI;
     }
 
-    public static ChestGUI Open(Player player,String title, Consumer<Boolean> result)
+    public static ChestGUI open(Player player,String title, Consumer<Boolean> result)
     {
-        ChestGUI gui = Instance().getGUI(player);
+        ChestGUI gui = instance().getGUI(player);
         gui.setTitle(title);
         return gui;
     }

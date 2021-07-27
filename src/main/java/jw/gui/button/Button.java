@@ -19,18 +19,17 @@ import java.util.List;
 public class Button extends ItemStack
 {
     private Vector position = new Vector(-1,-1,0);
+    private ButtonEvent onClick = (player,button)->{};
     private boolean isActive = true;
+    private boolean isHighLighted = false;
     private String permission  = "";
     private ButtonActionsEnum action = ButtonActionsEnum.EMPTY;
     private Object objectHolder;
-    private String tag = "";
     private Sound sound;
-    private ButtonEvent onClick = (player,button)->{};
-    private boolean highlighted = false;
     public Button(Material material)
     {
         super(material);
-        this.hideAtributes();
+        this.hideAttributes();
     }
     public Button(Material material, ButtonActionsEnum action)
     {
@@ -62,7 +61,8 @@ public class Button extends ItemStack
         this(material,name,onClick);
         setPosition(height,width);
     }
-    public void hideAtributes()
+
+    public void hideAttributes()
     {
         ItemMeta meta = this.getItemMeta();
         if(meta ==null)
@@ -70,7 +70,6 @@ public class Button extends ItemStack
         Arrays.asList(ItemFlag.values()).forEach(i -> meta.addItemFlags(i));
         this.setItemMeta(meta);
     }
-
     public boolean canPlayerUse(Player player)
     {
         if( this.permission!=null && !player.hasPermission(permission))
@@ -83,7 +82,7 @@ public class Button extends ItemStack
     public void setHighlighted(boolean value)
     {
         ItemMeta meta = this.getItemMeta();
-        highlighted = value;
+        isHighLighted = value;
         if(value)
             meta.addEnchant(Enchantment.ARROW_FIRE, 10, true);
         else
@@ -125,18 +124,7 @@ public class Button extends ItemStack
         }
         this.setItemMeta(meta);
     }
-    public Material getMaterial()
-    {
-       return this.getType();
-    }
-    public void setMaterial(Material material)
-    {
-        this.setType(material);
-    }
-
-
-
-    public void displayHoldedObject()
+    public void displayHeldObject()
     {
         if(objectHolder == null)
             return;
@@ -155,10 +143,7 @@ public class Button extends ItemStack
             {
                 description.add(ChatColor.WHITE+field.getName()+": "+ChatColor.DARK_RED+"Can not get value");
             }
-
         }
-
-
         this.setDescription(description);
     }
 
@@ -177,6 +162,14 @@ public class Button extends ItemStack
 
         meta.setLore(description);
         this.setItemMeta(meta);
+    }
+    public Material getMaterial()
+    {
+        return this.getType();
+    }
+    public void setMaterial(Material material)
+    {
+        this.setType(material);
     }
     public <T> T getHoldingObject()
     {
@@ -198,6 +191,37 @@ public class Button extends ItemStack
     {
         this.position.setX(width);
     }
+    public void setAction(ButtonActionsEnum action)
+    {
+        this.action = action;
+    }
+    public void setObjectHolder(Object objectHolder) {
+        this.objectHolder = objectHolder;
+    }
+    public void setOnClick(ButtonEvent onClick)
+    {
+        this.onClick = onClick;
+    }
+    public void setSound(Sound sound)
+    {
+        this.sound =sound;
+    }
+    public void setActive(boolean isActive)
+    {
+        this.isActive =isActive;
+    }
+
+    public Sound getSound()
+    {
+        return this.sound;
+    }
+    public ButtonEvent getOnClick() {
+        return onClick;
+    }
+    public ButtonActionsEnum getAction()
+    {
+        return this.action;
+    }
     public int getHeight()
     {
         return position.getBlockY();
@@ -206,72 +230,22 @@ public class Button extends ItemStack
     {
         return position.getBlockX();
     }
-    public  boolean IsActive()
+
+    public  boolean isActive()
     {
         return  isActive;
     }
-    public void setAction(ButtonActionsEnum action)
-    {
-        this.action = action;
-    }
-    public ButtonActionsEnum getAction()
-    {
-        return this.action;
-    }
-    public void setObjectHolder(Object objectHolder) {
-        this.objectHolder = objectHolder;
-    }
     public boolean isHighlighted()
     {
-        return this.highlighted;
-    }
-    public void setTag(String tag) {
-        this.tag = tag;
-    }
-    public void setActive(boolean isActive)
-    {
-        this.isActive =isActive;
-    }
-    public ButtonEvent getOnClick() {
-        return onClick;
-    }
-
-    public void setOnClick(ButtonEvent onClick)
-    {
-        this.onClick = onClick;
-    }
-
-    public Sound getSound()
-    {
-        return this.sound;
+        return this.isHighLighted;
     }
     public boolean hasSound()
     {
         return this.sound != null;
     }
-    public void setSound(Sound sound)
-    {
-        this.sound =sound;
-    }
-
     public boolean checkPermission(Player player)
     {
        return player.hasPermission(permission);
     }
 
-    public static Button fromItemStack(ItemStack itemStack) {
-        Button Button = new Button(itemStack.getType(), itemStack.getType().name());
-        Button.setData(itemStack.getData());
-        Button.setItemMeta(itemStack.getItemMeta());
-        Button.setAmount(itemStack.getAmount());
-        return Button;
-    }
-
-    public static ItemStack toItemStack(Button Button) {
-        ItemStack itemStack = new ItemStack(Button.getType(), Button.getAmount());
-        itemStack.setAmount(Button.getAmount());
-        itemStack.setData(Button.getData());
-        itemStack.setItemMeta(Button.getItemMeta());
-        return itemStack;
-    }
 }
