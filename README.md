@@ -1,4 +1,4 @@
-# JW_API
+# JW API
 Light library contains useful features for spigot plugin programing
 - inventory gui modul
 - easier commands registration
