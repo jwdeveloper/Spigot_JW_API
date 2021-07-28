@@ -17,7 +17,7 @@ import java.util.Arrays;
 import java.util.function.Consumer;
 
 public abstract class InventoryGUI {
-    protected Button[] buttons;
+    private Button[] buttons;
     protected String name;
     protected Inventory inventory;
     protected InventoryType inventoryType;

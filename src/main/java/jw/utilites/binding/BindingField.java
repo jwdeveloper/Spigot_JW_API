@@ -13,7 +13,6 @@ public class BindingField<T> implements Bindable<T> {
 
     private Field field;
     private Object object;
-    private Class _class;
     private Class fieldType;
     private boolean isBinded;
     private List<Consumer<T>> onChange = new ArrayList<>();
@@ -26,7 +25,8 @@ public class BindingField<T> implements Bindable<T> {
         return fieldType;
     }
 
-    public boolean isBinded() {
+    public boolean isBinded()
+    {
         return isBinded;
     }
 
@@ -86,14 +86,15 @@ public class BindingField<T> implements Bindable<T> {
         }
     }
 
-    private boolean bind(String filed, Object classObject) {
+    private boolean bind(String filed, Object classObject){
         try {
             this.field = classObject.getClass().getField(filed);
             this.object = classObject;
-            this._class = classObject.getClass();
             this.fieldType = field.getType();
             return true;
-        } catch (Exception e) {
+        } catch (NoSuchFieldException e)
+        {
+            Bukkit.getConsoleSender().sendMessage(ChatColor.RED+"Binding error:"+e.getMessage()+" Field: "+filed);
             return false;
         }
     }

@@ -121,7 +121,7 @@ public class SelectListGUI extends SingleInstanceGUI<ListGUI> {
                 Bukkit.getScheduler().runTask(InicializerAPI.getPlugin(), () ->
                 {
                     SkullMeta meta = (SkullMeta) Button.getItemMeta();
-                    meta.setOwner(e.getName());
+                    meta.setOwningPlayer(e);
                     Button.setItemMeta(meta);
                 });
             });

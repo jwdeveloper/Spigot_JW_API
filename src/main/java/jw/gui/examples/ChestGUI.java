@@ -77,6 +77,7 @@ public abstract class ChestGUI<T> extends InventoryGUI {
 
                 //Invoke all binded varables events for button
                 for (BindingStrategy bindingStrategy : bindingStrategies) {
+
                     if (bindingStrategy.getButton() == button) {
                         bindingStrategy.Execute(player, button);
                     }
@@ -92,9 +93,7 @@ public abstract class ChestGUI<T> extends InventoryGUI {
     @Override
     public void open(Player player) {
         initialize();
-        if (detail != null) {
-            refreshBindedButtons();
-        }
+        refreshBindedButtons();
         super.open(player);
     }
 
@@ -169,7 +168,8 @@ public abstract class ChestGUI<T> extends InventoryGUI {
         this.addButton(button);
     }
 
-    public void refreshBindedButtons() {
+    public void refreshBindedButtons()
+    {
         for (BindingStrategy strategy : bindingStrategies) {
             strategy.setObject(this.detail);
             strategy.onChangeEvent.OnValueChanged(this, strategy.getButton(), strategy.getValue());

@@ -43,9 +43,6 @@ public class VillagerGUI extends InventoryGUI
         trades.addAll(merchantRecipes);
         merchant.setRecipes(trades);
     }
-
-
-
     @Override
     protected int calculateSize(int height) {
         return 3;

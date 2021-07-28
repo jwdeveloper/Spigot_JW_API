@@ -29,7 +29,7 @@ public final class JsonFileHelper implements FileHelper
             file.write(gson.toJson(data));
             return true;
         } catch (IOException e) {
-            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Save File error: " + path + fileName);
+            Bukkit.getConsoleSender().sendMessage(ChatColor.RED + "Save File error: " + fullPath);
             e.printStackTrace();
         }
         return false;
@@ -83,23 +83,15 @@ public final class JsonFileHelper implements FileHelper
         }
         try
         {
-            final String folderPath = path.substring(0, path.length() - 1);
-            final File folder = new File(folderPath);
-            if (!folder.exists())
-            {
-
-                folder.mkdir();
-                folder.createNewFile();
-            }
-            FileWriter fileWriter = new FileWriter(fullPath);
+            file.getParentFile().mkdirs();
             file.createNewFile();
-            fileWriter.write("[]");
+            FileWriter fileWriter = new FileWriter(file);
+            fileWriter.write("{}");
             fileWriter.flush();
-
         }
         catch (IOException exception)
         {
-            Bukkit.getConsoleSender().sendMessage(ChatColor.RED+" Creating file error "+exception.getMessage() + "  " + fullPath);
+            Bukkit.getConsoleSender().sendMessage(ChatColor.RED+"Creating file error "+exception.getMessage() + "  " + fullPath);
         }
     }
 
@@ -109,6 +101,7 @@ public final class JsonFileHelper implements FileHelper
                 .registerTypeHierarchyAdapter(ItemStack.class, new ItemStackAdapter())
                 .registerTypeHierarchyAdapter(Location.class, new LocationAdapter())
                 .setExclusionStrategies(new BindingFieldSkip())
+                .setPrettyPrinting()
                 .create();
     }
 
