@@ -1,9 +1,11 @@
 package jw.data.repositories;
 
 import jw.data.models.Entity;
+import jw.utilites.files.FileHelper;
 import jw.utilites.files.JsonFileHelper;
 import org.bukkit.ChatColor;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Optional;
@@ -30,7 +32,10 @@ public class RepositoryBase<T extends Entity> implements Repository<T> {
         this(path, entityClass);
         this.fileName = filename;
     }
-
+    public RepositoryBase(Class<T> entityClass)
+    {
+        this(FileHelper.pluginPath(),entityClass,entityClass.getName());
+    }
 
     @Override
     public Class<T> getEntityClass() {
@@ -91,7 +96,16 @@ public class RepositoryBase<T extends Entity> implements Repository<T> {
     }
 
     @Override
-    public boolean deleteOne(String id, T data) {
+    public boolean deleteOne(T data)
+    {
+        if ( content.contains(data)) {
+            content.remove(data);
+            return true;
+        }
+        return false;
+    }
+    public boolean deleteOneById(String id)
+    {
         Optional<T> exist = content.stream()
                 .filter(p -> p.id.equalsIgnoreCase(id))
                 .findFirst();
@@ -101,10 +115,9 @@ public class RepositoryBase<T extends Entity> implements Repository<T> {
         }
         return false;
     }
-
     @Override
     public boolean deleteMany(ArrayList<T> data) {
-        data.stream().forEach(a -> this.deleteOne(a.id, a));
+        data.stream().forEach(a -> this.deleteOneById(a.id));
         return true;
     }
 

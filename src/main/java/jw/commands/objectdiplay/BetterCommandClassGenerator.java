@@ -8,7 +8,9 @@ import org.bukkit.entity.Player;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class BetterCommandClassGenerator extends BetterCommand
 {
@@ -30,8 +32,24 @@ public class BetterCommandClassGenerator extends BetterCommand
 
     private void createChildren()
     {
+        List<String> ignoredMethods = new ArrayList<>();
+        ignoredMethods.add("equals");
+        ignoredMethods.add("getClass");
+        ignoredMethods.add("hashCode");
+        ignoredMethods.add("notify");
+        ignoredMethods.add("notifyAll");
+        ignoredMethods.add("toString");
+        ignoredMethods.add("wait");
+
         for(Method method:_class.getMethods())
         {
+            boolean isIgnored = ignoredMethods.stream()
+                                              .anyMatch(ig -> ig.equalsIgnoreCase(method.getName()));
+            if(isIgnored)
+            {
+                continue;
+            }
+
             this.addChild(new MethodCommand(object,method));
         }
     }

@@ -69,9 +69,7 @@ public class SelectListGUI extends SingleInstanceGUI<ListGUI> {
                 }).collect(Collectors.toList()));
 
                 break;
-
             case Players:
-
                 gui_list.setName("Select player");
                 gui_list.clearItems();
                 gui_list.addButtons(instnace().getPlayers());

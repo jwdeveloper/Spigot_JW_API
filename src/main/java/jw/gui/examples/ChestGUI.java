@@ -11,7 +11,7 @@ import jw.gui.events.InputEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.event.inventory.*;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -66,7 +66,7 @@ public abstract class ChestGUI<T> extends InventoryGUI {
 
 
     @Override
-    protected void doClick(Player player, int index, ItemStack itemStack) {
+    protected void doClick(Player player, int index, ItemStack itemStack, InventoryInteractEvent interactEvent) {
         if (index < this.size) {
             Button button = this.getButton(index);
             if (button != null && button.isActive()) {
@@ -74,7 +74,6 @@ public abstract class ChestGUI<T> extends InventoryGUI {
                     player.playSound(player.getLocation(), button.getSound(), 1, 1);
                 if (!button.checkPermission(player))
                     return;
-
                 //Invoke all binded varables events for button
                 for (BindingStrategy bindingStrategy : bindingStrategies) {
 
@@ -83,8 +82,19 @@ public abstract class ChestGUI<T> extends InventoryGUI {
                     }
                 }
                 //Invoke button onclick
-                button.getOnClick().Execute(player, button);
-                onClick(player, button);
+                InventoryClickEvent inventoryClickEvent = (InventoryClickEvent)interactEvent;
+                switch (inventoryClickEvent.getClick())
+                {
+                    case SHIFT_LEFT:
+                    case SHIFT_RIGHT:
+                        button.getOnShiftClick().Execute(player, button);
+                        break;
+                    default:
+                        button.getOnClick().Execute(player, button);
+                        onClick(player, button);
+                        break;
+                }
+
             }
         } else {
             onClickAtPlayerItem(player, itemStack);
@@ -166,6 +176,11 @@ public abstract class ChestGUI<T> extends InventoryGUI {
             this.openParent();
         });
         this.addButton(button);
+    }
+
+    public void setDetail(T detail)
+    {
+        this.detail =detail;
     }
 
     public void refreshBindedButtons()

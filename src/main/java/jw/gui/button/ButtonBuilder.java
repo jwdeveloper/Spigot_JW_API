@@ -1,6 +1,7 @@
 package jw.gui.button;
 
 import jw.gui.events.ButtonEvent;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 
@@ -30,6 +31,11 @@ public class ButtonBuilder<SELF extends ButtonBuilder<SELF>>
     public SELF setName(String name)
     {
         this.button.setName(name);
+        return self();
+    }
+    public SELF setBoldName(String name)
+    {
+        this.button.setName(ChatColor.BOLD+name);
         return self();
     }
     public SELF setMaterial(Material material)

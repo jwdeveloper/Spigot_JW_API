@@ -8,11 +8,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
@@ -30,12 +31,11 @@ public abstract class InventoryGUI {
     private boolean isOpen = false;
     private InventoryGUI parent;
     protected static final int MAX_TITLE_SIZE = 38;
-
     protected abstract void onClick(Player player, Button button);
     protected abstract void onRefresh(Player player);
     protected abstract void onOpen(Player player);
     protected abstract void onClose(Player player);
-    protected abstract void doClick(Player player, int index, ItemStack itemStack);
+    protected abstract void doClick(Player player, int index, ItemStack itemStack, InventoryInteractEvent interactEvent);
 
     protected InventoryGUI(String name, int height, InventoryType type) {
         this.name = name;
@@ -76,10 +76,10 @@ public abstract class InventoryGUI {
         this.player = player;
 
         if (player != null && this.player.isOnline()) {
-            this.onOpen(this.player);
             this.inventory = createInventory(inventoryType);
+            this.onOpen(this.player);
             refreshButtons();
-            InventoryGUIEventsHander.Instnace().register(this);
+            InventoryGUIEventsHandler.Instance().register(this);
             player.openInventory(this.inventory);
             isOpen = true;
         }
@@ -97,7 +97,7 @@ public abstract class InventoryGUI {
     }
 
     public void close() {
-        InventoryGUIEventsHander.Instnace().unregister(this);
+        InventoryGUIEventsHandler.Instance().unregister(this);
         isOpen = false;
         if (player != null && this.player.isOnline()) {
             this.onClose(this.player);
@@ -110,18 +110,18 @@ public abstract class InventoryGUI {
     public void setName(String name) {
         this.displayedName = name;
         if (player != null && player.isOnline() && isOpen) {
-            InventoryGUIEventsHander.Instnace().unregister(this);
+            InventoryGUIEventsHandler.Instance().unregister(this);
             this.inventory = createInventory(inventoryType);
             refreshButtons();
             player.openInventory(this.inventory);
-            InventoryGUIEventsHander.Instnace().register(this);
+            InventoryGUIEventsHandler.Instance().register(this);
         }
     }
 
     public void setTitle(String title) {
         isTitleSet = true;
         StringBuilder result = new StringBuilder();
-        title = "§3§l" + title;
+        title = "§8§l" + title;
         int title_size = title.length();
         int start = (MAX_TITLE_SIZE / 2) - (title_size / 2);
         int l = 0;
@@ -169,9 +169,9 @@ public abstract class InventoryGUI {
     public void setActive(boolean isActive) {
         isOpen = isActive;
         if (isOpen)
-            InventoryGUIEventsHander.Instnace().register(this);
+            InventoryGUIEventsHandler.Instance().register(this);
         else
-            InventoryGUIEventsHander.Instnace().unregister(this);
+            InventoryGUIEventsHandler.Instance().unregister(this);
     }
 
     public InventoryGUI setParent(InventoryGUI parent) {
@@ -249,6 +249,22 @@ public abstract class InventoryGUI {
 
     public void displayLog(String message, ChatColor chatColor) {
         Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.YELLOW + this.toString() + ": " + chatColor + message);
+    }
+
+
+    public void openTextInput(String message,Consumer<String> onChatInput)
+    {
+       player.sendMessage(message);
+       openTextInput(onChatInput);
+    }
+    public void openTextInput(Consumer<String> onChatInput)
+    {
+        InventoryGUIEventsHandler.Instance().registerTextInput(player,value ->
+        {
+            onChatInput.accept(value);
+            this.open(player);
+        });
+        this.close();
     }
 
     public void playSound(Sound sound)

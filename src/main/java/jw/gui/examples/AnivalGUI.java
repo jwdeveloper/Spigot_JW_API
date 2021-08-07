@@ -5,6 +5,8 @@ import jw.gui.core.InventoryGUI;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 
@@ -40,7 +42,7 @@ public class AnivalGUI extends InventoryGUI
     }
 
     @Override
-    protected void doClick(Player player, int index, ItemStack itemStack) {
+    protected void doClick(Player player, int index, ItemStack itemStack, InventoryInteractEvent interactEvent) {
       this.displayLog(" "+index+" "+itemStack.toString(), ChatColor.GREEN);
     }
 }

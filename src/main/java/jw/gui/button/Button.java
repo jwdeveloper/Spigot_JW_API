@@ -20,6 +20,7 @@ public class Button extends ItemStack
 {
     private Vector position = new Vector(-1,-1,0);
     private ButtonEvent onClick = (player,button)->{};
+    private ButtonEvent onShiftClick = (player,button)->{};
     private boolean isActive = true;
     private boolean isHighLighted = false;
     private String permission  = "";
@@ -101,7 +102,7 @@ public class Button extends ItemStack
         if(meta ==null)
             return;
 
-        meta.setDisplayName(name.replace("&","§"));
+        meta.setDisplayName(ChatColor.WHITE+name.replace("&","§"));
         this.setItemMeta(meta);
     }
     public void addDescription(String ... description)
@@ -156,9 +157,13 @@ public class Button extends ItemStack
         if(description == null)
             return;
         ItemMeta meta = this.getItemMeta();
-
         if(meta ==null)
             return;
+
+        for(int i=0;i<description.size();i++)
+        {
+            description.set(i,ChatColor.WHITE+description.get(i));
+        }
 
         meta.setLore(description);
         this.setItemMeta(meta);
@@ -210,13 +215,19 @@ public class Button extends ItemStack
     {
         this.isActive =isActive;
     }
-
+    public void setOnShiftClick(ButtonEvent onShiftClick)
+    {
+        this.onShiftClick  = onShiftClick;
+    }
     public Sound getSound()
     {
         return this.sound;
     }
     public ButtonEvent getOnClick() {
         return onClick;
+    }
+    public ButtonEvent getOnShiftClick() {
+        return onShiftClick;
     }
     public ButtonActionsEnum getAction()
     {

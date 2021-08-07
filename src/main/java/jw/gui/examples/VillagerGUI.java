@@ -2,11 +2,11 @@ package jw.gui.examples;
 
 import jw.gui.button.Button;
 import jw.gui.core.InventoryGUI;
-import jw.gui.core.InventoryGUIEventsHander;
+import jw.gui.core.InventoryGUIEventsHandler;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.*;
 
@@ -54,12 +54,12 @@ public class VillagerGUI extends InventoryGUI
         this.player = player;
         if (player != null && this.player.isOnline()) {
             this.onOpen(this.player);
-            InventoryGUIEventsHander.Instnace().register(this);
+            InventoryGUIEventsHandler.Instance().register(this);
             player.openMerchant(merchant,true);
         }
     }
     @Override
-    protected void doClick(Player player, int index, ItemStack itemStack)
+    protected void doClick(Player player, int index, ItemStack itemStack, InventoryInteractEvent interactEvent)
     {
         onTradeSelected(this.trades.get(index));
     }

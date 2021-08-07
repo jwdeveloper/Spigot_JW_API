@@ -90,7 +90,7 @@ public class InputGUI {
             }
         });
 
-        guiTextinput.setSlot(AnivalGUIOld.AnvilSlot.INPUT_LEFT, new Button(Material.NAME_TAG, ChatColor.BLACK + ChatColor.stripColor(displayed_text)));
+        guiTextinput.setSlot(AnivalGUIOld.AnvilSlot.INPUT_LEFT, new Button(Material.NAME_TAG, ChatColor.DARK_GRAY + ChatColor.stripColor(displayed_text)));
         guiTextinput.setSlot(AnivalGUIOld.AnvilSlot.OUTPUT, new Button(Material.NAME_TAG, displayed_text));
         Bukkit.getScheduler().runTask(InicializerAPI.getPlugin(), () ->
         {

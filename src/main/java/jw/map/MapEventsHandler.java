@@ -1,20 +1,13 @@
 package jw.map;
 
 import jw.InicializerAPI;
-import jw.gui.core.InventoryGUIEventsHander;
 import org.bukkit.Bukkit;
-import org.bukkit.Color;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.server.MapInitializeEvent;
 import org.bukkit.event.server.PluginDisableEvent;
-import org.bukkit.map.MapView;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class MapEventsHandler implements Listener
 {

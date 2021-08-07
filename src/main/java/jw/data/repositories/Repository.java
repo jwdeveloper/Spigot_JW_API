@@ -19,7 +19,7 @@ public interface Repository <T>
 
      boolean updateMany(HashMap<String,T> data);
 
-     boolean deleteOne(String id,T data);
+     boolean deleteOne(T data);
 
      boolean deleteMany(ArrayList<T> data);
 

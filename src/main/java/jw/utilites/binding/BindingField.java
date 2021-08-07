@@ -57,21 +57,9 @@ public class BindingField<T> implements Bindable<T> {
     }
 
     public void setAsync(T value) {
-        if (!isBinded)
-            return;
         Bukkit.getScheduler().runTask(InicializerAPI.getPlugin(), () ->
         {
-            try {
-                field.set(object, value);
-
-                for (Consumer<T> consumer : onChange) {
-                    consumer.accept(value);
-                }
-
-
-            } catch (Exception e) {
-                Bukkit.getConsoleSender().sendMessage(ChatColor.RED + " Error set binding field: " + e.getMessage());
-            }
+            set(value);
         });
     }
 

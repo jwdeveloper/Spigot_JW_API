@@ -9,6 +9,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.*;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.server.PluginDisableEvent;
 import org.bukkit.inventory.Inventory;
@@ -16,32 +17,43 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantInventory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.function.Consumer;
 
-public class InventoryGUIEventsHander implements Listener {
-    private static InventoryGUIEventsHander instnace;
+public class InventoryGUIEventsHandler implements Listener {
+    private  static InventoryGUIEventsHandler instance;
     private final ArrayList<InventoryGUI> inventoriesGui = new ArrayList();
-
-    public static InventoryGUIEventsHander Instnace() {
-        if (instnace == null) {
-            instnace = new InventoryGUIEventsHander();
+    private final HashMap<Player,Consumer<String>> textInputEvents = new HashMap<>();
+    public static InventoryGUIEventsHandler Instance() {
+        if (instance == null) {
+            instance = new InventoryGUIEventsHandler();
         }
-        return instnace;
+        return instance;
     }
 
-    public InventoryGUIEventsHander() {
+    public InventoryGUIEventsHandler() {
         Bukkit.getPluginManager().registerEvents(this, InicializerAPI.getPlugin());
     }
 
+    public void registerTextInput(Player player,Consumer<String> event)
+    {
+        if(textInputEvents.containsKey(player))
+        {
+            textInputEvents.replace(player,event);
+        }
+        else
+        {
+            textInputEvents.put(player,event);
+        }
+    }
     public void register(InventoryGUI InventoryGUIBase) {
         if (!inventoriesGui.contains(InventoryGUIBase)) {
             inventoriesGui.add(InventoryGUIBase);
         }
     }
-
     public void unregister(InventoryGUI InventoryGUIBase) {
         inventoriesGui.remove(InventoryGUIBase);
     }
-
     @EventHandler
     private void onInventoryOpen(InventoryOpenEvent event)
     {
@@ -49,7 +61,6 @@ public class InventoryGUIEventsHander implements Listener {
         for (InventoryGUI inventoryGUI : inventoriesGui)
         {
             inventory = inventoryGUI.inventory;
-
             if(inventory == null && event.getInventory() instanceof MerchantInventory)
             {
                 final VillagerGUI villagerGUI = (VillagerGUI)inventoryGUI;
@@ -60,7 +71,6 @@ public class InventoryGUIEventsHander implements Listener {
                     villagerGUI.setInventory(inventory);
                 }
             }
-
             if (inventory == null || !inventoryGUI.isOpen()) continue;
             if (event.getInventory() == inventory) {
                 inventoryGUI.refresh();
@@ -99,7 +109,7 @@ public class InventoryGUIEventsHander implements Listener {
                     event.setCancelled(true);
                     final ItemStack clickedItem = event.getCurrentItem();
                     if (clickedItem == null || clickedItem.getType() == Material.AIR) return;
-                        inventoryGUI.doClick((Player)event.getWhoClicked(), event.getRawSlot(), clickedItem);
+                        inventoryGUI.doClick((Player)event.getWhoClicked(), event.getRawSlot(), clickedItem,event);
                     break;
                 }
             }
@@ -109,14 +119,13 @@ public class InventoryGUIEventsHander implements Listener {
     private void onPlayerExit(PlayerQuitEvent event) {
         for(int i=0;i<inventoriesGui.size();i++)
         {
-            if (event.getPlayer() ==   inventoriesGui.get(i).player) {
+            if (event.getPlayer() == inventoriesGui.get(i).player) {
                 inventoriesGui.get(i).close();
                 this.unregister(inventoriesGui.get(i));
                 return;
             }
         }
     }
-
     @EventHandler
     private void onPluginDisable(PluginDisableEvent event) {
         if (event.getPlugin().equals(InicializerAPI.getPlugin()))
@@ -129,15 +138,27 @@ public class InventoryGUIEventsHander implements Listener {
         }
     }
     @EventHandler
-    private void OnTradeSelected(TradeSelectEvent event)
+    private void onTradeSelected(TradeSelectEvent event)
     {
         for (InventoryGUI inventoryGUI : inventoriesGui)
         {
            if(inventoryGUI.getType() == InventoryType.MERCHANT)
            {
-               inventoryGUI.doClick((Player)event.getWhoClicked(), event.getIndex(), null);
+               inventoryGUI.doClick((Player)event.getWhoClicked(), event.getIndex(), null,null);
            }
         }
     }
-
+    @EventHandler
+    private void onChatEvent(AsyncPlayerChatEvent event)
+    {
+        if(textInputEvents.containsKey(event.getPlayer()))
+        {
+            Bukkit.getScheduler().runTask(InicializerAPI.getPlugin(),()->
+            {
+                textInputEvents.get(event.getPlayer()).accept(event.getMessage());
+                textInputEvents.remove(event.getPlayer());
+            });
+            event.setCancelled(true);
+        }
+    }
 }

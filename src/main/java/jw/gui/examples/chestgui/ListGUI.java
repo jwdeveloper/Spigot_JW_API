@@ -15,6 +15,7 @@ import org.bukkit.potion.PotionType;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 public class ListGUI<T> extends ChestGUI<T> {
@@ -37,7 +38,7 @@ public class ListGUI<T> extends ChestGUI<T> {
     protected List<Button> actionButtons = new ArrayList<>();
 
     protected Material backgroundMaterial = Material.BLACK_STAINED_GLASS_PANE;
-    protected ButtonActionsEnum currentAction = ButtonActionsEnum.EMPTY;
+    protected ButtonActionsEnum currentAction = ButtonActionsEnum.GET;
 
     protected int maxPages = 1;
     protected int page = 1;
@@ -112,8 +113,16 @@ public class ListGUI<T> extends ChestGUI<T> {
         search_box.setPosition(0, 0);
         search_box.setOnClick((a,b) ->
         {
-            a.sendMessage("Search not implemented yet");
-          /* this.OpenTextInput("Search", "", (x, y) ->
+
+            this.openTextInput("Enter value on chat",input ->
+            {
+                this.fileterContent(input);
+                setActionButtonVisibility(ButtonActionsEnum.CANCEL, true);
+                this.refresh();
+            });
+          /*
+           a.sendMessage("Search not implemented yet");
+          this.OpenTextInput("Search", "", (x, y) ->
             {
                 this.Filter_Content(y);
                 SetActionButtonVisibility(ButtonActionsEnum.CANCEL, true);
@@ -122,7 +131,7 @@ public class ListGUI<T> extends ChestGUI<T> {
         });
 
         Button removeButton = ButtonFactory.deleteButton();
-        removeButton.setPosition(0, 7);
+        removeButton.setPosition(0, 8);
         removeButton.setOnClick((a,b) ->
         {
             currentAction = ButtonActionsEnum.DELETE;
@@ -135,11 +144,18 @@ public class ListGUI<T> extends ChestGUI<T> {
                 this.refresh();
         });
         Button insertbutton = ButtonFactory.insertButton();
+        insertbutton.setSound( Sound.UI_CARTOGRAPHY_TABLE_TAKE_RESULT);
         insertbutton.setPosition(0, 6);
         insertbutton.setOnClick((a,b) ->
         {
             cancelAction();
             currentAction = ButtonActionsEnum.INSERT;
+
+            this.openTextInput(ChatColor.BOLD+"Enter name",input ->
+            {
+                onInsert.accept(input);
+                this.refresh();
+            });
             /*this.openTextInput("Insert", "", (x, y) ->
             {
                 player.playSound(player.getLocation(), Sound.UI_CARTOGRAPHY_TABLE_TAKE_RESULT, 1, 1);
@@ -237,7 +253,7 @@ public class ListGUI<T> extends ChestGUI<T> {
             this.currentAction == ButtonActionsEnum.COPY   ||
             this.currentAction == ButtonActionsEnum.EDIT)
         {
-            currentAction = ButtonActionsEnum.EMPTY;
+            currentAction = ButtonActionsEnum.GET;
             setActionButtonVisibility(ButtonActionsEnum.CANCEL, false);
             this.drawBorder(this.backgroundMaterial);
             setPageName();
@@ -254,17 +270,16 @@ public class ListGUI<T> extends ChestGUI<T> {
     }
 
     public void setActionButtonVisibility(ButtonActionsEnum buttonActionsEnum, boolean value) {
-        for (Button actionButton : actionButtons) {
-            if (actionButton.getAction().equals(buttonActionsEnum)) {
-                if (value) {
-                    this.addButton(actionButton);
-                } else {
-                    this.addButton(ButtonFactory.getBackground(
-                            this.backgroundMaterial),
-                            actionButton.getHeight(),
-                            actionButton.getWidth());
-                }
-                break;
+
+        Optional<Button> button = actionButtons.stream().filter(b -> b.getAction().equals(buttonActionsEnum)).findFirst();
+        if(button.isPresent())
+        {
+            button.get().setActive(value);
+            if(!value)
+            {
+                this.addButton(ButtonFactory.getBackground(this.backgroundMaterial),
+                               button.get().getHeight(),
+                               button.get().getWidth());
             }
         }
     }
@@ -338,19 +353,19 @@ public class ListGUI<T> extends ChestGUI<T> {
     }
 
     public void openPage(int page) {
-        List<Button> content_to_show = this.filteredContent.size() == 0 ? this.content : this.filteredContent;
+        List<Button> contentToDisplay = this.filteredContent.size() == 0 ? this.content : this.filteredContent;
 
-        int size = content_to_show.size() - 1;
-        int start_index = maxItemsOnPage * (page - 1);
+        int size = contentToDisplay.size() - 1;
+        int startIndex = maxItemsOnPage * (page - 1);
 
         int end_index = Math.min(maxItemsOnPage * page, size);
         Button itemStack;
         for (int j = 1; j < this.height - 1; j++) {
             for (int i = 1; i <= 7; i++) {
-                if (start_index <= end_index) {
-                    itemStack = content_to_show.get(start_index);
+                if (startIndex <= end_index) {
+                    itemStack = contentToDisplay.get(startIndex);
                     this.addButton(itemStack, j, i);
-                    start_index += 1;
+                    startIndex += 1;
                 } else {
                     this.addButton(null, j, i);
                 }
