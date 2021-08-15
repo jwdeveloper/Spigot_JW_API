@@ -14,12 +14,12 @@ import java.util.stream.Collectors;
 
 public class RepositoryGUI<T extends Entity> extends ListGUI<T>
 {
-    private final Repository<T> repositoryGUI;
+    private final Repository<T> repository;
 
-    public RepositoryGUI(InventoryGUI parent,String name, Repository<T> repositoryGUI)
+    public RepositoryGUI(InventoryGUI parent,String name, Repository<T> repository)
     {
         super(parent, name, 6);
-        this.repositoryGUI = repositoryGUI;
+        this.repository = repository;
     }
 
     @Override
@@ -28,16 +28,16 @@ public class RepositoryGUI<T extends Entity> extends ListGUI<T>
         this.onDelete = (player,button) ->
         {
            T dataModel = button.getHoldingObject();
-           repositoryGUI.deleteOne(dataModel);
+            repository.deleteOne(dataModel);
            this.open(player);
         };
         this.onInsert = (value) ->
         {
             try
             {
-                T dataModel = repositoryGUI.getEntityClass().newInstance();
+                T dataModel = repository.getEntityClass().newInstance();
                 dataModel.name = value;
-                repositoryGUI.insertOne(dataModel);
+                repository.insertOne(dataModel);
                 this.open(player);
             }
             catch (Exception e)
@@ -48,17 +48,22 @@ public class RepositoryGUI<T extends Entity> extends ListGUI<T>
 
     }
 
+
+
     @Override
     public void onOpen(Player player)
     {
-        this.addButtons(MapEntityToButtons(repositoryGUI.getMany(null)));
+        this.addButtons(mapEntityToButtons(repository.getMany(null)));
     }
 
-    private List<Button> MapEntityToButtons(List<T> entityList)
+    public List<Button> mapEntityToButtons(List<T> entityList)
     {
         return entityList.stream().map(this::mapDataToButton).collect(Collectors.toList());
     }
-
+    public Repository<T> getRepository()
+    {
+        return  repository;
+    }
     public Button mapDataToButton(T data)
     {
         Button button = new Button(data.icon,data.name,data.description);

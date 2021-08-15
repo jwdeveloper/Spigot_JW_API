@@ -83,7 +83,6 @@ public abstract class InventoryGUI {
             player.openInventory(this.inventory);
             isOpen = true;
         }
-        if (this.enableLogs)
             this.displayLog("Open", ChatColor.GREEN);
     }
 
@@ -92,7 +91,6 @@ public abstract class InventoryGUI {
             refreshButtons();
             this.onRefresh(this.player);
         }
-        if (this.enableLogs)
             this.displayLog("Refresh", ChatColor.YELLOW);
     }
 
@@ -103,7 +101,6 @@ public abstract class InventoryGUI {
             this.onClose(this.player);
             player.closeInventory();
         }
-        if (this.enableLogs)
             this.displayLog("Close", ChatColor.RED);
     }
 
@@ -248,6 +245,7 @@ public abstract class InventoryGUI {
     }
 
     public void displayLog(String message, ChatColor chatColor) {
+        if(enableLogs)
         Bukkit.getServer().getConsoleSender().sendMessage(ChatColor.YELLOW + this.toString() + ": " + chatColor + message);
     }
 

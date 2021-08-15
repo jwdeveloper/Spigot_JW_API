@@ -34,14 +34,13 @@ public class SelectListGUI extends SingleInstanceGUI<ListGUI> {
     @Override
     public ListGUI setGUI() {
         ListGUI listGUI = new ListGUI(null, "GUI list", 6);
-        listGUI.selectiveMode();
         return listGUI;
     }
 
     public static ListGUI get(Player player, String title, ArrayList<Button> items, InventoryEvent acction) {
         ListGUI gui_list = instnace().getGUI(player);
         gui_list.setName(title);
-        gui_list.selectItem(acction);
+       // gui_list.selectItem(acction);
         gui_list.clearItems();
         gui_list.addButtons(items);
         return gui_list;
@@ -90,7 +89,7 @@ public class SelectListGUI extends SingleInstanceGUI<ListGUI> {
                 gui_list.addButtons(buttons);
                 break;
         }
-        gui_list.selectItem(acction);
+      //  gui_list.selectItem(acction);
         return gui_list;
     }
 

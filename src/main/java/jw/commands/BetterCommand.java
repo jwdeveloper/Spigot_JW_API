@@ -49,7 +49,7 @@ public abstract class BetterCommand extends BukkitCommand {
         BetterCommand target = this;
         String[] arguments = args;
         if (args.length != 0) {
-            BetterCommand child_invoked = target.isChildinvoked(args);
+            BetterCommand child_invoked = target.isChildInvoked(args);
             if (child_invoked != null) {
                 target = child_invoked;
                 for (int j = 0; j < args.length; j++) {
@@ -76,7 +76,7 @@ public abstract class BetterCommand extends BukkitCommand {
         if (args.length != 0) {
             //null nie jest najlepszym rozwiazaniem, ale komu by sie chcialo robic opcjonala
             //magia połaczona z rekurencją
-            BetterCommand child_invoked = target.isChildinvoked(args);
+            BetterCommand child_invoked = target.isChildInvoked(args);
             if (child_invoked != null) {
                 target = child_invoked;
 
@@ -87,13 +87,11 @@ public abstract class BetterCommand extends BukkitCommand {
                     }
                 }
             }
-
         }
         if (target.OnNoArguments != null && arguments.length == 0) {
             target.OnNoArguments.accept(commandSender);
             return commandResult;
         }
-
         if (commandSender instanceof Player) {
             //sprawdzanie permisji
             if (target.permissionSet && !((Player) commandSender).hasPermission(target.permission))
@@ -101,7 +99,6 @@ public abstract class BetterCommand extends BukkitCommand {
                 commandSender.sendMessage(target.noPermissionMessage + ": " + target.permission);
                 return commandResult;
             }
-
             target.onInvoke((Player) commandSender, arguments);
         } else {
             target.onInvoke((ConsoleCommandSender) commandSender, arguments);
@@ -120,15 +117,13 @@ public abstract class BetterCommand extends BukkitCommand {
     }
 
     //rekurencja bejbe
-    public BetterCommand isChildinvoked(String[] args) {
+    public BetterCommand isChildInvoked(String[] args) {
         BetterCommand result = null;
         for (BetterCommand c : children) {
             //szukanie komendy wsrod dzieci
             if (args.length > 1) {
                 String[] part = Arrays.copyOfRange(args, 1, args.length);
-
-                result = c.isChildinvoked(part);
-
+                result = c.isChildInvoked(part);
                 if (result != null) {
                     break;
                 }
@@ -178,7 +173,6 @@ public abstract class BetterCommand extends BukkitCommand {
             return complieters;
         });
     }
-
 
     public void displaySubCommandsNames() {
         tabCompletes.putIfAbsent(1, () ->

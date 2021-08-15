@@ -15,7 +15,6 @@ import org.bukkit.potion.PotionType;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 public class ListGUI<T> extends ChestGUI<T> {
@@ -33,12 +32,16 @@ public class ListGUI<T> extends ChestGUI<T> {
     public InventoryEvent onEdit = (a, b) -> {
     };
 
+    private Button insertButton;
+    private Button searchButton;
+    private Button deleteButton;
+    private Button copyButton;
+    private Button cancelButton;
+
     protected List<Button> content = new ArrayList<>();
     protected List<Button> filteredContent = new ArrayList<>();
-    protected List<Button> actionButtons = new ArrayList<>();
-
     protected Material backgroundMaterial = Material.BLACK_STAINED_GLASS_PANE;
-    protected ButtonActionsEnum currentAction = ButtonActionsEnum.GET;
+    protected ButtonActionsEnum currentAction = ButtonActionsEnum.EMPTY;
 
     protected int maxPages = 1;
     protected int page = 1;
@@ -48,21 +51,24 @@ public class ListGUI<T> extends ChestGUI<T> {
         super(parent, name, size);
         maxItemsOnPage = 7 * (size - 2);
         setActionButtons();
+        this.drawBorder(backgroundMaterial);
     }
 
     public ListGUI(InventoryGUI parent, String name, int size, Class<T> tClass) {
         super(parent, name, size, tClass);
         maxItemsOnPage = 7 * (size - 2);
         setActionButtons();
+        this.drawBorder(backgroundMaterial);
     }
     @Override
     public void onInitialize() {
 
     }
-
     @Override
     public void onClick(Player player, Button button) {
-        if (button.getAction() == ButtonActionsEnum.CLICK) {
+        if (button.getAction() == ButtonActionsEnum.CLICK)
+        {
+            this.displayLog("Click, current action "+this.currentAction.name(),ChatColor.GREEN);
             switch (this.currentAction)
             {
                 case EDIT:
@@ -90,7 +96,6 @@ public class ListGUI<T> extends ChestGUI<T> {
                     this.onSelect.Execute(player, button);
                     this.cancelAction();
                     break;
-
                 default:
                     if (this.content.contains(button)) {
                         this.onClickContent.Execute(player, button);
@@ -99,43 +104,52 @@ public class ListGUI<T> extends ChestGUI<T> {
             }
         }
     }
+    public Button getInsertButton()
+    {
+        if(this.insertButton!=null)
+            return this.insertButton;
 
-    private void setActionButtons() {
-
-        Button exitButton = ButtonFactory.exitButton();
-        exitButton.setPosition(this.height - 1, 8);
-        exitButton.setOnClick((a,b) ->
+        insertButton = ButtonFactory.insertButton();
+        insertButton.setSound(Sound.UI_CARTOGRAPHY_TABLE_TAKE_RESULT);
+        insertButton.setPosition(0, 6);
+        insertButton.setOnClick((a,b) ->
         {
             cancelAction();
-            this.openParent();
+            this.openTextInput(ChatColor.BOLD+"Enter name",input ->
+            {
+                onInsert.accept(input);
+            });
         });
-        Button search_box = ButtonFactory.searchButton();
-        search_box.setPosition(0, 0);
-        search_box.setOnClick((a,b) ->
+        return insertButton;
+    }
+    public Button getSearchButton()
+    {
+        if(this.searchButton!=null)
+            return this.searchButton;
+        searchButton = ButtonFactory.searchButton();
+        searchButton.setPosition(0, 0);
+        searchButton.setOnClick((a,b) ->
         {
-
+            cancelAction();
             this.openTextInput("Enter value on chat",input ->
             {
-                this.fileterContent(input);
-                setActionButtonVisibility(ButtonActionsEnum.CANCEL, true);
-                this.refresh();
+                this.filterContent(input);
+                this.getCancelButton().setActive(true);
             });
-          /*
-           a.sendMessage("Search not implemented yet");
-          this.OpenTextInput("Search", "", (x, y) ->
-            {
-                this.Filter_Content(y);
-                SetActionButtonVisibility(ButtonActionsEnum.CANCEL, true);
-                this.Refresh();
-            });*/
         });
+        return searchButton;
+    }
+    public Button getDeleteButton()
+    {
+        if(this.deleteButton!=null)
+            return this.deleteButton;
 
-        Button removeButton = ButtonFactory.deleteButton();
-        removeButton.setPosition(0, 8);
-        removeButton.setOnClick((a,b) ->
+        deleteButton = ButtonFactory.deleteButton();
+        deleteButton.setPosition(0, 8);
+        deleteButton.setOnClick((a,b) ->
         {
-            currentAction = ButtonActionsEnum.DELETE;
-            setActionButtonVisibility(ButtonActionsEnum.CANCEL, true);
+            this.setCurrentAction(ButtonActionsEnum.DELETE);
+            this.getCancelButton().setActive(false);
             this.drawBorder(Material.RED_STAINED_GLASS_PANE);
 
             if (!isTitleSet)
@@ -143,58 +157,33 @@ public class ListGUI<T> extends ChestGUI<T> {
             else
                 this.refresh();
         });
-        Button insertbutton = ButtonFactory.insertButton();
-        insertbutton.setSound( Sound.UI_CARTOGRAPHY_TABLE_TAKE_RESULT);
-        insertbutton.setPosition(0, 6);
-        insertbutton.setOnClick((a,b) ->
-        {
-            cancelAction();
-            currentAction = ButtonActionsEnum.INSERT;
+        return deleteButton;
+    }
+    public Button getCopyButton()
+    {
+        if(this.copyButton!=null)
+            return this.copyButton;
 
-            this.openTextInput(ChatColor.BOLD+"Enter name",input ->
-            {
-                onInsert.accept(input);
-                this.refresh();
-            });
-            /*this.openTextInput("Insert", "", (x, y) ->
-            {
-                player.playSound(player.getLocation(), Sound.UI_CARTOGRAPHY_TABLE_TAKE_RESULT, 1, 1);
-                onInsert.accept(y);
-            }, (c, d) ->
-            {
-                currentAction = ButtonActionsEnum.EMPTY;
-            });*/
-        });
-        Button editButton = ButtonFactory.editButton();
-        editButton.setPosition(0, 7);
-        editButton.setOnClick((a,b) ->
-        {
-            currentAction = ButtonActionsEnum.EDIT;
-            setActionButtonVisibility(ButtonActionsEnum.CANCEL, true);
-            this.drawBorder(Material.YELLOW_STAINED_GLASS_PANE);
-
-            if (!isTitleSet)
-                this.setName(this.name + ChatColor.YELLOW + " [Edit]");
-            else
-                this.refresh();
-        });
-
-        Button copyButton = ButtonFactory.copyButton();
+        copyButton = ButtonFactory.copyButton();
         copyButton.setPosition(0, 5);
         copyButton.setOnClick((a,b) ->
         {
-            currentAction = ButtonActionsEnum.COPY;
-            setActionButtonVisibility(ButtonActionsEnum.CANCEL, true);
+            this.setCurrentAction(ButtonActionsEnum.COPY);
             this.drawBorder(Material.LIME_STAINED_GLASS_PANE);
-
             if (!isTitleSet)
                 this.setName(this.name + ChatColor.DARK_GREEN + " [Copy]");
             else
                 this.refresh();
-
         });
+        return copyButton;
+    }
 
-        Button cancelButton = ButtonFactory.cancelButton();
+    public Button getCancelButton()
+    {
+        if(this.cancelButton!=null)
+            return this.cancelButton;
+
+        cancelButton = ButtonFactory.cancelButton();
         cancelButton.setPosition(this.height - 1, 4);
         cancelButton.setOnClick((a,b) ->
         {
@@ -203,61 +192,63 @@ public class ListGUI<T> extends ChestGUI<T> {
             this.addButtons(this.content);
             this.refresh();
         });
+        return cancelButton;
+    }
+    private void setActionButtons() {
 
-        Button left_arrow = ButtonFactory.BackButton(PotionType.SLOWNESS);
-        left_arrow.setPosition(this.height - 1, 3);
-        left_arrow.setOnClick((a,b) ->
+
+        Button exitButton = ButtonFactory.exitButton();
+        exitButton.setPosition(this.height - 1, 8);
+        exitButton.setOnClick((a,b) ->
+        {
+            cancelAction();
+            this.openParent();
+        });
+
+        Button leftArrow = ButtonFactory.BackButton(PotionType.SLOWNESS);
+        leftArrow.setPosition(this.height - 1, 3);
+        leftArrow.setOnClick((a,b) ->
         {
             a.playSound(a.getLocation(), Sound.BLOCK_SNOW_BREAK, 1, 1);
             this.backPage();
             this.refresh();
         });
-
-        Button right_arrow = ButtonFactory.nextButton(PotionType.SLOWNESS);
-        right_arrow.setPosition(this.height - 1, 5);
-        right_arrow.setOnClick((a,b) ->
+        Button rightArrow = ButtonFactory.nextButton(PotionType.SLOWNESS);
+        rightArrow.setPosition(this.height - 1, 5);
+        rightArrow.setOnClick((a,b) ->
         {
             a.playSound(a.getLocation(), Sound.BLOCK_SNOW_BREAK, 1, 1);
             this.nextPage();
             this.refresh();
         });
 
-        this.actionButtons.add(exitButton);
-        this.actionButtons.add(search_box);
-        this.actionButtons.add(removeButton);
-        this.actionButtons.add(insertbutton);
-        this.actionButtons.add(copyButton);
-        this.actionButtons.add(cancelButton);
-        this.actionButtons.add(left_arrow);
-        this.actionButtons.add(right_arrow);
-        this.actionButtons.add(editButton);
 
-
-        for (Button button:actionButtons)
-        {
-            this.addButton(button);
-        }
-        setActionButtonVisibility(ButtonActionsEnum.CANCEL, false);
-        this.drawBorder(backgroundMaterial);
+        this.addButton(exitButton);
+        this.addButton(leftArrow);
+        this.addButton(rightArrow);
+        this.addButton(getCancelButton());
+        this.addButton(getCopyButton());
+        this.addButton(getDeleteButton());
+        this.addButton(getInsertButton());
+        this.addButton(getSearchButton());
     }
-
-    public void selectItem(InventoryEvent onSelect) {
-        this.currentAction = ButtonActionsEnum.GET;
-        this.drawBorder(Material.BLUE_STAINED_GLASS_PANE);
-        this.refresh();
-        this.onSelect = onSelect;
-    }
-
     private void cancelAction() {
         if (this.currentAction == ButtonActionsEnum.DELETE ||
             this.currentAction == ButtonActionsEnum.COPY   ||
             this.currentAction == ButtonActionsEnum.EDIT)
         {
-            currentAction = ButtonActionsEnum.GET;
-            setActionButtonVisibility(ButtonActionsEnum.CANCEL, false);
+            this.displayLog("Cancel action ",ChatColor.RED);
+            this.setCurrentAction(ButtonActionsEnum.EMPTY);
+            this.getCancelButton().setActive(false);
             this.drawBorder(this.backgroundMaterial);
             setPageName();
         }
+    }
+
+    private void setCurrentAction(ButtonActionsEnum action)
+    {
+        this.displayLog("Set current action: "+action.name(),ChatColor.GREEN);
+        this.currentAction = action;
     }
 
     private void setPageName() {
@@ -269,37 +260,7 @@ public class ListGUI<T> extends ChestGUI<T> {
             this.setName(this.name + " " + ChatColor.DARK_GRAY);
     }
 
-    public void setActionButtonVisibility(ButtonActionsEnum buttonActionsEnum, boolean value) {
-
-        Optional<Button> button = actionButtons.stream().filter(b -> b.getAction().equals(buttonActionsEnum)).findFirst();
-        if(button.isPresent())
-        {
-            button.get().setActive(value);
-            if(!value)
-            {
-                this.addButton(ButtonFactory.getBackground(this.backgroundMaterial),
-                               button.get().getHeight(),
-                               button.get().getWidth());
-            }
-        }
-    }
-
-    public Button getActionButton(ButtonActionsEnum buttonActionsEnum) {
-        for (Button actionButton : actionButtons) {
-            if (actionButton.getAction().equals(buttonActionsEnum)) {
-                return actionButton;
-            }
-        }
-        return ButtonFactory.emptyButton();
-    }
-
-    public void selectiveMode() {
-        setActionButtonVisibility(ButtonActionsEnum.COPY, false);
-        setActionButtonVisibility(ButtonActionsEnum.INSERT, false);
-        setActionButtonVisibility(ButtonActionsEnum.DELETE, false);
-    }
-
-    private void fileterContent(String value) {
+    private void filterContent(String value) {
 
         if (value == null) {
 
@@ -342,6 +303,8 @@ public class ListGUI<T> extends ChestGUI<T> {
         if (this.page + 1 <= this.maxPages) {
             this.page += 1;
             openPage(this.page);
+
+            this.displayLog("Next page "+page,ChatColor.GREEN);
         }
     }
 
@@ -349,6 +312,8 @@ public class ListGUI<T> extends ChestGUI<T> {
         if (this.page - 1 >= 1) {
             this.page -= 1;
             openPage(this.page);
+
+            this.displayLog("Back page "+page,ChatColor.GREEN);
         }
     }
 

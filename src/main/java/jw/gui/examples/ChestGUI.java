@@ -145,9 +145,11 @@ public abstract class ChestGUI<T> extends InventoryGUI {
             for (int j = 0; j < this.height; j++) {
                 if (i == 0 || j == 0 || j == this.height - 1 || i == 8) {
                     button = getButton(j, i);
-                    if (button == null) {
+                    if (button == null)
+                    {
                         this.addButton(ButtonFactory.getBackground(material), j, i);
-                    } else if (button.getAction() == ButtonActionsEnum.BACKGROUND || button.getAction() == ButtonActionsEnum.EMPTY) {
+                    } else if (button.getAction() == ButtonActionsEnum.BACKGROUND || button.getAction() == ButtonActionsEnum.EMPTY)
+                    {
                         button.setType(material);
                     }
                 }
