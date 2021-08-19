@@ -11,6 +11,8 @@ public interface Repository <T>
 
      ArrayList<T> getMany(HashMap<String,String> args);
 
+     ArrayList<T> getMany();
+
      boolean insertOne(T data);
 
      boolean insertMany(ArrayList<T> data);
@@ -22,8 +24,4 @@ public interface Repository <T>
      boolean deleteOne(T data);
 
      boolean deleteMany(ArrayList<T> data);
-
-     boolean loadData();
-
-     boolean saveData();
 }

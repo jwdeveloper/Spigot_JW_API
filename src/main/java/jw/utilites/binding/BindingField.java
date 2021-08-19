@@ -1,6 +1,6 @@
 package jw.utilites.binding;
 
-import jw.InicializerAPI;
+import jw.InitializerAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 
@@ -11,11 +11,11 @@ import java.util.function.Consumer;
 
 public class BindingField<T> implements Bindable<T> {
 
-    private Field field;
-    private Object object;
-    private Class fieldType;
-    private boolean isBinded;
-    private List<Consumer<T>> onChange = new ArrayList<>();
+    protected Field field;
+    protected Object object;
+    protected Class fieldType;
+    protected boolean isBinded;
+    protected List<Consumer<T>> onChange = new ArrayList<>();
 
     public BindingField(String filed, Object classObject) {
         isBinded = bind(filed, classObject);
@@ -57,7 +57,7 @@ public class BindingField<T> implements Bindable<T> {
     }
 
     public void setAsync(T value) {
-        Bukkit.getScheduler().runTask(InicializerAPI.getPlugin(), () ->
+        Bukkit.getScheduler().runTask(InitializerAPI.getPlugin(), () ->
         {
             set(value);
         });
@@ -74,7 +74,7 @@ public class BindingField<T> implements Bindable<T> {
         }
     }
 
-    private boolean bind(String filed, Object classObject){
+    protected boolean bind(String filed, Object classObject){
         try {
             this.field = classObject.getClass().getField(filed);
             this.object = classObject;
@@ -86,6 +86,4 @@ public class BindingField<T> implements Bindable<T> {
             return false;
         }
     }
-
-
 }

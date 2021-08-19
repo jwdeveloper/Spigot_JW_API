@@ -1,6 +1,6 @@
 package jw.map;
 
-import jw.InicializerAPI;
+import jw.InitializerAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -17,7 +17,7 @@ public class MapEventsHandler implements Listener
 
 
     public MapEventsHandler() {
-        Bukkit.getPluginManager().registerEvents(this, InicializerAPI.getPlugin());
+        Bukkit.getPluginManager().registerEvents(this, InitializerAPI.getPlugin());
     }
 
     public static MapEventsHandler Instnace() {
@@ -56,7 +56,7 @@ public class MapEventsHandler implements Listener
     @EventHandler
     public void onPluginDisable(PluginDisableEvent pluginDisableEvent)
     {
-        if(pluginDisableEvent.getPlugin() == InicializerAPI.getPlugin())
+        if(pluginDisableEvent.getPlugin() == InitializerAPI.getPlugin())
         {
             mapDrawers.forEach( (k,v) ->
             {

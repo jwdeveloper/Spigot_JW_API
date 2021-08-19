@@ -1,6 +1,6 @@
 package jw.task;
 
-import jw.InicializerAPI;
+import jw.InitializerAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -49,7 +49,7 @@ public class TaskQueue<T> {
 
     public void Run() {
         is_cancel = false;
-        bukkitTask = Bukkit.getScheduler().runTaskAsynchronously(InicializerAPI.getPlugin(), () ->
+        bukkitTask = Bukkit.getScheduler().runTaskAsynchronously(InitializerAPI.getPlugin(), () ->
         {
             try {
                 T result = obj;
@@ -72,13 +72,13 @@ public class TaskQueue<T> {
 
     public void RunSync() {
         is_cancel = false;
-        bukkitTask = Bukkit.getScheduler().runTaskAsynchronously(InicializerAPI.getPlugin(), () ->
+        bukkitTask = Bukkit.getScheduler().runTaskAsynchronously(InitializerAPI.getPlugin(), () ->
         {
             try {
                 AtomicReference<T> result = new AtomicReference<>(tasks.get(0).execute(obj, this));
 
                 if (tasks.size() > 1) {
-                    Bukkit.getScheduler().runTask(InicializerAPI.getPlugin(), () ->
+                    Bukkit.getScheduler().runTask(InitializerAPI.getPlugin(), () ->
                     {
                         try {
                             Task<T> current = null;
@@ -95,7 +95,7 @@ public class TaskQueue<T> {
                     });
                 }
             } catch (Exception e) {
-                Bukkit.getScheduler().runTask(InicializerAPI.getPlugin(), () ->
+                Bukkit.getScheduler().runTask(InitializerAPI.getPlugin(), () ->
                 {
                     onerror.accept(e);
                 });

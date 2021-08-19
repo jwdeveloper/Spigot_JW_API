@@ -12,7 +12,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
 
-public class RepositoryBase<T extends Entity> implements Repository<T> {
+public class RepositoryBase<T extends Entity> implements Repository<T> ,Saveable {
 
     public ArrayList<T> content = new ArrayList<>();
     private String path;
@@ -125,27 +125,7 @@ public class RepositoryBase<T extends Entity> implements Repository<T> {
         content.clear();
     }
 
-    @Override
-    public boolean loadData() {
-        try {
-            content = JsonFileHelper.loadList(path, fileName, entityClass);
-            return true;
-        } catch (Exception e) {
-            onError.accept(fileName + " " + entityClass.getName() + " " + e.getMessage());
-            return false;
-        }
-    }
 
-    @Override
-    public boolean saveData() {
-        try {
-            JsonFileHelper.save(content, path, fileName);
-            return true;
-        } catch (Exception e) {
-            onError.accept(fileName + " " + entityClass.getName() + " " + e.getMessage());
-            return false;
-        }
-    }
 
     public T CreateEmpty() {
         try {
@@ -157,5 +137,28 @@ public class RepositoryBase<T extends Entity> implements Repository<T> {
             onError.accept(igonre.getMessage());
         }
         return null;
+    }
+
+    @Override
+    public boolean load()
+    {
+            try {
+                content = JsonFileHelper.loadList(path, fileName, entityClass);
+                return true;
+            } catch (Exception e) {
+                onError.accept(fileName + " " + entityClass.getName() + " " + e.getMessage());
+                return false;
+            }
+    }
+
+    @Override
+    public boolean save() {
+        try {
+            JsonFileHelper.save(content, path, fileName);
+            return true;
+        } catch (Exception e) {
+            onError.accept(fileName + " " + entityClass.getName() + " " + e.getMessage());
+            return false;
+        }
     }
 }

@@ -1,6 +1,6 @@
 package jw.gui.core;
 
-import jw.InicializerAPI;
+import jw.InitializerAPI;
 import jw.packets.NMSManager;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -25,7 +25,7 @@ import java.util.HashMap;
 
 public class AnivalGUIOld {
 
-    private Plugin plugin = InicializerAPI.getPlugin();
+    private Plugin plugin = InitializerAPI.getPlugin();
 
     private boolean colorrename = true;
 

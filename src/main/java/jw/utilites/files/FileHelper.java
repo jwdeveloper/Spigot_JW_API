@@ -1,13 +1,6 @@
 package jw.utilites.files;
 
-import com.google.gson.*;
-import jw.InicializerAPI;
-import jw.utilites.files.json.ItemStackAdapter;
-import jw.utilites.files.json.LocationAdapter;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.inventory.ItemStack;
+import jw.InitializerAPI;
 
 import java.io.*;
 import java.nio.file.Path;
@@ -23,7 +16,7 @@ public interface FileHelper {
     }
 
     static String pluginPath() {
-        return FileHelper.serverPath() + File.separator + "plugins" + File.separator + InicializerAPI.getPlugin().getName() ;
+        return FileHelper.serverPath() + File.separator + "plugins" + File.separator + InitializerAPI.getPlugin().getName() ;
     }
     static String pluginsPath() {
         return FileHelper.serverPath() + File.separator + "plugins";

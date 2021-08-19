@@ -1,5 +1,5 @@
 package jw.gui.examples.textinput;
-import jw.InicializerAPI;
+import jw.InitializerAPI;
 import jw.gui.button.Button;
 import jw.gui.core.AnivalGUIOld;
 import jw.gui.core.InventoryGUI;
@@ -61,7 +61,7 @@ public class InputGUI {
 
             @Override
             public void onAnvilClick(AnivalGUIOld.AnvilClickEvent e) {
-                Bukkit.getScheduler().runTask(InicializerAPI.getPlugin(), () ->
+                Bukkit.getScheduler().runTask(InitializerAPI.getPlugin(), () ->
                 {
 
                     if (e.getSlot() == AnivalGUIOld.AnvilSlot.OUTPUT && e.hasText()) {
@@ -92,7 +92,7 @@ public class InputGUI {
 
         guiTextinput.setSlot(AnivalGUIOld.AnvilSlot.INPUT_LEFT, new Button(Material.NAME_TAG, ChatColor.DARK_GRAY + ChatColor.stripColor(displayed_text)));
         guiTextinput.setSlot(AnivalGUIOld.AnvilSlot.OUTPUT, new Button(Material.NAME_TAG, displayed_text));
-        Bukkit.getScheduler().runTask(InicializerAPI.getPlugin(), () ->
+        Bukkit.getScheduler().runTask(InitializerAPI.getPlugin(), () ->
         {
             guiTextinput.open(name);
         });

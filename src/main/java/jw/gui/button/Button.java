@@ -27,6 +27,7 @@ public class Button extends ItemStack
     private ButtonActionsEnum action = ButtonActionsEnum.EMPTY;
     private Object objectHolder;
     private Sound sound;
+
     public Button(Material material)
     {
         super(material);

@@ -1,6 +1,6 @@
 package jw.utilites.player;
 
-import jw.InicializerAPI;
+import jw.InitializerAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.permissions.PermissionAttachment;
@@ -11,7 +11,7 @@ public class PermissionUtility
 {
     public static void givePermission(Player player, String permission)
     {
-        PermissionAttachment attachment = player.addAttachment(InicializerAPI.getPlugin());
+        PermissionAttachment attachment = player.addAttachment(InitializerAPI.getPlugin());
         attachment.setPermission(permission,true);
     }
 

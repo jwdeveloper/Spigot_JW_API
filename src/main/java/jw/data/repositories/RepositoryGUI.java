@@ -5,6 +5,7 @@ import jw.gui.button.ButtonActionsEnum;
 import jw.gui.examples.chestgui.ListGUI;
 import jw.gui.button.Button;
 import jw.gui.core.InventoryGUI;
+import jw.gui.examples.chestgui.utilites.ButtonMapper;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -47,29 +48,21 @@ public class RepositoryGUI<T extends Entity> extends ListGUI<T>
         };
 
     }
-
-
-
     @Override
     public void onOpen(Player player)
     {
-        this.addButtons(mapEntityToButtons(repository.getMany(null)));
-    }
-
-    public List<Button> mapEntityToButtons(List<T> entityList)
-    {
-        return entityList.stream().map(this::mapDataToButton).collect(Collectors.toList());
+      this.addButtons(repository.getMany(),this::mapDataToButton);
     }
     public Repository<T> getRepository()
     {
         return  repository;
     }
-    public Button mapDataToButton(T data)
+    public void mapDataToButton(T data,Button button)
     {
-        Button button = new Button(data.icon,data.name,data.description);
+        button.setMaterial(data.icon);
+        button.setName(data.name);
         button.setObjectHolder(data);
         button.setAction(ButtonActionsEnum.CLICK);
         button.setDescription(ChatColor.GREEN+" "+ChatColor.BOLD+"[ Click to show details ]");
-        return button;
     }
 }

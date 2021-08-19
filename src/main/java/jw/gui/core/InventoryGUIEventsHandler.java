@@ -1,6 +1,6 @@
 package jw.gui.core;
 
-import jw.InicializerAPI;
+import jw.InitializerAPI;
 import jw.gui.examples.VillagerGUI;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -32,7 +32,7 @@ public class InventoryGUIEventsHandler implements Listener {
     }
 
     public InventoryGUIEventsHandler() {
-        Bukkit.getPluginManager().registerEvents(this, InicializerAPI.getPlugin());
+        Bukkit.getPluginManager().registerEvents(this, InitializerAPI.getPlugin());
     }
 
     public void registerTextInput(Player player,Consumer<String> event)
@@ -128,7 +128,7 @@ public class InventoryGUIEventsHandler implements Listener {
     }
     @EventHandler
     private void onPluginDisable(PluginDisableEvent event) {
-        if (event.getPlugin().equals(InicializerAPI.getPlugin()))
+        if (event.getPlugin().equals(InitializerAPI.getPlugin()))
         {
             InventoryGUI inventoryGUI = null;
             for(int i=0;i<inventoriesGui.size();i++)
@@ -153,7 +153,7 @@ public class InventoryGUIEventsHandler implements Listener {
     {
         if(textInputEvents.containsKey(event.getPlayer()))
         {
-            Bukkit.getScheduler().runTask(InicializerAPI.getPlugin(),()->
+            Bukkit.getScheduler().runTask(InitializerAPI.getPlugin(),()->
             {
                 textInputEvents.get(event.getPlayer()).accept(event.getMessage());
                 textInputEvents.remove(event.getPlayer());

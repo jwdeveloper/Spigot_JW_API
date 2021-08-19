@@ -1,7 +1,7 @@
 package jw.task;
 
 
-import jw.InicializerAPI;
+import jw.InitializerAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -28,7 +28,7 @@ public class TaskTimer
     }
     public void runAsync()
     {
-        taskId= Bukkit.getScheduler().runTaskTimerAsynchronously(InicializerAPI.getPlugin(),()->
+        taskId= Bukkit.getScheduler().runTaskTimerAsynchronously(InitializerAPI.getPlugin(),()->
         {
             if(time>=stopAfter || isCancel)
             {
@@ -43,7 +43,7 @@ public class TaskTimer
     }
     public void run()
     {
-        taskId= Bukkit.getScheduler().runTaskTimer(InicializerAPI.getPlugin(),()->
+        taskId= Bukkit.getScheduler().runTaskTimer(InitializerAPI.getPlugin(),()->
         {
             if(time>=stopAfter || isCancel)
             {

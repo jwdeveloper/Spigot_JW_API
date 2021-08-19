@@ -1,9 +1,8 @@
 package jw.gui.examples.chestgui;
 
-import jw.InicializerAPI;
+import jw.InitializerAPI;
 import jw.gui.button.Button;
 import jw.gui.button.ButtonFactory;
-import jw.gui.core.InventoryGUI;
 import jw.gui.events.InventoryEvent;
 import jw.gui.examples.SingleInstanceGUI;
 import org.bukkit.Bukkit;
@@ -41,7 +40,7 @@ public class SelectListGUI extends SingleInstanceGUI<ListGUI> {
         ListGUI gui_list = instnace().getGUI(player);
         gui_list.setName(title);
        // gui_list.selectItem(acction);
-        gui_list.clearItems();
+        gui_list.clearButtons();
         gui_list.addButtons(items);
         return gui_list;
     }
@@ -52,12 +51,12 @@ public class SelectListGUI extends SingleInstanceGUI<ListGUI> {
         switch (searchType) {
             case Materials:
                 gui_list.setName("Select material");
-                gui_list.clearItems();
+                gui_list.clearButtons();
                 gui_list.addButtons(instnace().getMaterials());
                 break;
             case Block:
                 gui_list.setName("Select material");
-                gui_list.clearItems();
+                gui_list.clearButtons();
                 gui_list.addButtons(instnace().getMaterials().stream().filter(e ->
                 {
                     Material material = e.getHoldingObject();
@@ -70,7 +69,7 @@ public class SelectListGUI extends SingleInstanceGUI<ListGUI> {
                 break;
             case Players:
                 gui_list.setName("Select player");
-                gui_list.clearItems();
+                gui_list.clearButtons();
                 gui_list.addButtons(instnace().getPlayers());
                 break;
             case PlayerInventory:
@@ -85,7 +84,7 @@ public class SelectListGUI extends SingleInstanceGUI<ListGUI> {
                     }
                 }
                 gui_list.setName("Select item");
-                gui_list.clearItems();
+                gui_list.clearButtons();
                 gui_list.addButtons(buttons);
                 break;
         }
@@ -115,7 +114,7 @@ public class SelectListGUI extends SingleInstanceGUI<ListGUI> {
                 Button Button = new Button(Material.PLAYER_HEAD, e.getName());
                 Button.setObjectHolder(e);
                 players_buttons.add(Button);
-                Bukkit.getScheduler().runTask(InicializerAPI.getPlugin(), () ->
+                Bukkit.getScheduler().runTask(InitializerAPI.getPlugin(), () ->
                 {
                     SkullMeta meta = (SkullMeta) Button.getItemMeta();
                     meta.setOwningPlayer(e);
