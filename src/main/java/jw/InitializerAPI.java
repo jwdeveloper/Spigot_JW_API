@@ -1,6 +1,6 @@
 package jw;
 import jw.data.repositories.DataManager;
-import jw.dependency_injection.ServiceManager;
+import jw.dependency_injection.InjectionManager;
 import jw.gui.core.InventoryGUIEventsHandler;
 import jw.logs.LoggerManager;
 import jw.map.MapEventsHandler;
@@ -42,10 +42,10 @@ public final class InitializerAPI
         InitializerAPI.plugin = plugin;
         InitializerAPI.logger = new LoggerManager("JW API -"+plugin.getName());
         dataManager = new DataManager();
-        ServiceManager.Instance();
+        InjectionManager.Instance();
         InventoryGUIEventsHandler.Instance();
         MapEventsHandler.Instnace();
-        ServiceManager.Instance();
+        InjectionManager.Instance();
     }
 
     private static void log(String color,String message)
@@ -57,7 +57,7 @@ public final class InitializerAPI
     {
          if(isPluginAttached())
          {
-             ServiceManager.registerAllFromPackage(plugin.getClass().getPackage());
+             InjectionManager.registerAllFromPackage(plugin.getClass().getPackage());
              dataManager.attacheServices();
          }
     }

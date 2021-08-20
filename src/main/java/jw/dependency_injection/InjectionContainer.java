@@ -2,31 +2,26 @@ package jw.dependency_injection;
 
 import jw.InitializerAPI;
 
-import java.lang.reflect.Type;
 import java.util.HashMap;
 
-public class ServiceContainer
+public class InjectionContainer
 {
-    private final HashMap<Class<?>,Service> serviceHashMap = new HashMap<>();
+    private final HashMap<Class<?>, Injection> serviceHashMap = new HashMap<>();
 
 
-    public HashMap<Class<?>,Service> getServices()
+    public HashMap<Class<?>, Injection> getInjections()
     {
         return serviceHashMap;
     }
 
-    public <T> void register(ServiceType serviceType,Class<T> type)
+    public <T> void register(InjectionType serviceType, Class<T> type)
     {
       if(serviceHashMap.containsKey(type))
-      {
           return;
-      }
-      Service service = new Service(serviceType,type);
-      serviceHashMap.put(type,service);
 
-
+      serviceHashMap.put(type,new Injection(serviceType,type));
     }
-    public <T> T getService(Class<?> type)
+    public <T> T getObject(Class<?> type)
     {
         try
         {
@@ -35,12 +30,12 @@ public class ServiceContainer
                 InitializerAPI.errorLog("Service "+type.getTypeName()+" not found!");
                 return null;
             }
-            Service service = serviceHashMap.get(type);
-            if(service.getServiceType() ==ServiceType.TRANSIENT || !service.isInit())
+            Injection injection = serviceHashMap.get(type);
+            if(injection.getInjectionType() == InjectionType.TRANSIENT || !injection.isInit())
             {
-              if(service.setParams(this::getService))
+              if(injection.setParams(this::getObject))
               {
-                  service.createInstance();
+                  injection.createInstance();
               }
               else
               {
@@ -48,7 +43,7 @@ public class ServiceContainer
                   return null;
               }
             }
-            return service.getInstance();
+            return injection.getInstance();
         }
         catch (Exception e)
         {

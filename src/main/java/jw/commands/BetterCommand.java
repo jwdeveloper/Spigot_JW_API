@@ -42,6 +42,7 @@ public abstract class BetterCommand extends BukkitCommand {
         super(name);
         registerCommands();
         onInitialize();
+        this.displaySubCommandsNames();
     }
 
     @Override

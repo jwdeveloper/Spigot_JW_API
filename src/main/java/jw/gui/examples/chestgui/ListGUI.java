@@ -1,6 +1,7 @@
 package jw.gui.examples.chestgui;
 
 
+import jw.InitializerAPI;
 import jw.gui.examples.ChestGUI;
 import jw.gui.button.Button;
 import jw.gui.button.ButtonActionsEnum;
@@ -251,7 +252,7 @@ public class ListGUI<T> extends ChestGUI<T> {
     }
 
     private void setUpGUI() {
-        maxItemsOnPage = 7 * (size - 2);
+        maxItemsOnPage = 7 * (height - 2);
         pagination = new ListGUIPagination<T>(maxItemsOnPage);
         currentAcction.set(ButtonActionsEnum.EMPTY);
         currentAcction.onChange(actionsEnum ->

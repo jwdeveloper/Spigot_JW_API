@@ -1,8 +1,6 @@
 package jw.data.repositories;
 
-import jw.data.repositories.Repository;
-import jw.data.repositories.Saveable;
-import jw.dependency_injection.ServiceManager;
+import jw.dependency_injection.InjectionManager;
 import jw.utilites.files.FileHelper;
 import jw.utilites.ObjectHelper;
 import jw.utilites.files.JsonFileHelper;
@@ -27,7 +25,7 @@ public class DataManager {
 
     public void attacheServices()
     {
-        objects.addAll(ServiceManager.getServicesByType(Saveable.class));
+        objects.addAll(InjectionManager.getObjectByType(Saveable.class));
     }
 
     public List<Saveable> getObjects()

@@ -1,6 +1,6 @@
 package jw.dependency_injection;
 
-public enum ServiceType
+public enum InjectionType
 {
     SINGLETON,TRANSIENT
 }

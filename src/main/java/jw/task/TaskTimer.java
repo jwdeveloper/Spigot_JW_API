@@ -41,6 +41,11 @@ public class TaskTimer
             time++;
         },runAfter,speed);
     }
+    public void reset()
+    {
+        this.time = 0;
+    }
+
     public void run()
     {
         taskId= Bukkit.getScheduler().runTaskTimer(InitializerAPI.getPlugin(),()->

@@ -2,8 +2,8 @@ package jw.dependency_injection;
 
 import java.lang.reflect.Type;
 
-public interface ServiceMapper
+public interface InjectionMapper
 {
-    public Object map(Class type);
+    public Object map(Class<?> type);
 
 }

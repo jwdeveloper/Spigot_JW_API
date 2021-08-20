@@ -7,9 +7,9 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.TYPE)
-public @interface ServiceAttribute
+public @interface Injectable
 {
-    ServiceType serviceType() default ServiceType.SINGLETON;
+    InjectionType injectionType() default InjectionType.SINGLETON;
 
     boolean autoInit() default false;
 }

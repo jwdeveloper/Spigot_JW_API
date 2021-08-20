@@ -5,15 +5,15 @@ import jw.InitializerAPI;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-public class Service {
-    private final ServiceType serviceType;
+public class Injection {
+    private final InjectionType serviceType;
     private final Class<?> aClass;
     private Object instance;
     private Constructor<?> constructor;
     private Object[] params;
     private Class<?>[] parametersType;
 
-    public Service(ServiceType serviceType, Class<?> aClass) {
+    public Injection(InjectionType serviceType, Class<?> aClass) {
         this.aClass = aClass;
         this.serviceType = serviceType;
         if (aClass.getConstructors().length > 0) {
@@ -28,7 +28,7 @@ public class Service {
         return aClass;
     }
 
-    public boolean setParams(ServiceMapper mapParams) {
+    public boolean setParams(InjectionMapper mapParams) {
         if (constructor == null || params == null)
         {
             return true;
@@ -40,8 +40,8 @@ public class Service {
             if (params[i] == null) {
                 InitializerAPI.errorLog("Constructor parameter with type " +
                                          parametersType[i] +
-                                         "at index " + i +
-                                         "Not found in " +
+                                         " at index " + i +
+                                         " Not found in " +
                                           getClass().getSimpleName());
                 return false;
             }
@@ -53,7 +53,7 @@ public class Service {
         return instance != null;
     }
 
-    public ServiceType getServiceType() {
+    public InjectionType getInjectionType() {
         return serviceType;
     }
 
@@ -74,8 +74,8 @@ public class Service {
 
     @Override
     public String toString() {
-        return "Service " + this.hashCode() +
-                "ServiceType" + serviceType +
+        return "Injection " + this.hashCode() +
+                "Injection type " + serviceType +
                 "Is init " + this.isInit();
     }
 }
