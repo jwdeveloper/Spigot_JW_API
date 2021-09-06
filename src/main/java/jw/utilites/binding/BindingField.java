@@ -20,7 +20,13 @@ public class BindingField<T> implements Bindable<T> {
     public BindingField(String filed, Object classObject) {
         isBinded = bind(filed, classObject);
     }
-
+    public BindingField(Field filed, Object classObject)
+    {
+        this.field = filed;
+        this.object = classObject;
+        this.fieldType = field.getType();
+        isBinded = true;
+    }
     public Class getType() {
         return fieldType;
     }

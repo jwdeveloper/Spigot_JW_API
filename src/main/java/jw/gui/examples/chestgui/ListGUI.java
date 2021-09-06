@@ -10,6 +10,7 @@ import jw.gui.core.InventoryGUI;
 import jw.gui.events.InventoryEvent;
 import jw.gui.examples.chestgui.utilites.ButtonMapper;
 import jw.gui.examples.chestgui.utilites.ListGUIPagination;
+import jw.utilites.Pagination;
 import jw.utilites.binding.BindingObject;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -24,7 +25,6 @@ public class ListGUI<T> extends ChestGUI<T> {
 
     public Consumer<String> onInsert = (a) -> {
     };
-
     public InventoryEvent onClickContent = this::actionPlaceHolder;
 
     public InventoryEvent onSelect = this::actionPlaceHolder;
@@ -35,7 +35,7 @@ public class ListGUI<T> extends ChestGUI<T> {
 
     public InventoryEvent onEdit = this::actionPlaceHolder;
 
-    protected ListGUIPagination<T> pagination;
+    protected ListGUIPagination pagination;
     protected BindingObject<ButtonActionsEnum> currentAcction = new BindingObject<>();
 
     private Material backgroundMaterial = Material.BLACK_STAINED_GLASS_PANE;
@@ -140,6 +140,12 @@ public class ListGUI<T> extends ChestGUI<T> {
         return searchButton;
     }
 
+    public void setBackgroundMaterial(Material material)
+    {
+        this.backgroundMaterial = material;
+        this.drawBorder(this.backgroundMaterial);
+    }
+
     public Button getDeleteButton() {
         if (this.deleteButton != null)
             return this.deleteButton;
@@ -196,6 +202,12 @@ public class ListGUI<T> extends ChestGUI<T> {
             }
         }
     }
+
+    public void setPagination(ListGUIPagination pagination)
+    {
+        this.pagination = pagination;
+    }
+
 
     public void addButtons(List<T> data, ButtonMapper<T> buttonMapper) {
         this.pagination.setContent(data);

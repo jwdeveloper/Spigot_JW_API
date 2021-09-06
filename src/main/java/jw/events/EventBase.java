@@ -15,11 +15,11 @@ public abstract class EventBase implements Listener
         Bukkit.getPluginManager().registerEvents(this, InitializerAPI.getPlugin());
     }
 
-    public void onPluginStart(PluginEnableEvent pluginEnableEvent)
+    public void onPluginStart(PluginEnableEvent event)
     {
 
     }
-    public void onPluginStop(PluginDisableEvent pluginEnableEvent)
+    public void onPluginStop(PluginDisableEvent event)
     {
 
     }

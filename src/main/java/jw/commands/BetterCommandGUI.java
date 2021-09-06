@@ -1,5 +1,7 @@
 package jw.commands;
 
+import jw.InitializerAPI;
+import jw.dependency_injection.InjectionManager;
 import jw.gui.core.InventoryGUI;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
@@ -7,16 +9,15 @@ import org.bukkit.entity.Player;
 import java.util.HashMap;
 import java.util.UUID;
 
-public abstract class BetterCommandGUI extends BetterCommand {
+public abstract class BetterCommandGUI extends BetterCommand
+{
 
-    private final HashMap<UUID, InventoryGUI> playersGui = new HashMap<UUID, InventoryGUI>();
-
-    public BetterCommandGUI(String name) {
+    private final Class<? extends InventoryGUI> guiType;
+    public BetterCommandGUI(String name,Class<? extends InventoryGUI> guiType)
+    {
         super(name);
+        this.guiType = guiType;
     }
-
-    public abstract InventoryGUI setInventoryGUI();
-
     public void onInvoke(Player playerSender, String[] args)
     {
         this.getGUI(playerSender).open(playerSender);
@@ -24,27 +25,12 @@ public abstract class BetterCommandGUI extends BetterCommand {
 
     public void onInvoke(ConsoleCommandSender serverSender, String[] args)
     {
-
+        InitializerAPI.errorLog("GUI "+guiType.getSimpleName()+" can't be open by console!");
     }
-
     public abstract void onInitialize();
 
-    public void closeGUI() {
-        playersGui.forEach((a, b) ->
-        {
-            playersGui.get(a).close();
-        });
+    protected InventoryGUI getGUI(Player player)
+    {
+        return InjectionManager.getObjectPlayer(guiType,player.getUniqueId());
     }
-
-    public InventoryGUI getGUI(Player player) {
-        if (playersGui.containsKey(player.getUniqueId()))
-            return playersGui.get(player.getUniqueId());
-
-        InventoryGUI gui = setInventoryGUI();
-        gui.setPlayer(player);
-        playersGui.put(player.getUniqueId(), gui);
-        return gui;
-    }
-
-
 }

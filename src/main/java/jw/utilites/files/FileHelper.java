@@ -25,6 +25,39 @@ public interface FileHelper {
         return new File(path).exists();
     }
 
+
+
+    public static void removeDirectory(File file)
+    {
+        if(file == null)
+            return;
+
+        if(file.isDirectory())
+        {
+            File[] files = file.listFiles();
+
+            if(files != null)
+            {
+                for(File childFile : files)
+                {
+                    if(childFile.isDirectory())
+                        removeDirectory(childFile);
+                    else if(!childFile.delete())
+                    {
+
+                    }
+                      //  getLogger().warning("Could not delete file: " + childFile.getName());
+                }
+            }
+        }
+
+        if(!file.delete())
+        {
+            
+        }
+          //  getLogger().warning("Could not delete file: " + file.getName());
+    }
+
      static ArrayList<String> getFolderFilesName(String path, String... extensions) {
         ArrayList<String> result = new ArrayList<>();
         if(!isPathExists(path))

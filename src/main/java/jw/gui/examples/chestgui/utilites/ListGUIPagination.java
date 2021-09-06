@@ -1,15 +1,10 @@
 package jw.gui.examples.chestgui.utilites;
 
 import jw.InitializerAPI;
-import jw.data.models.Entity;
 import jw.gui.button.Button;
 import jw.utilites.Pagination;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class ListGUIPagination<T> extends Pagination<T>
 {
@@ -63,7 +58,6 @@ public class ListGUIPagination<T> extends Pagination<T>
         int height = (getMaxContentOnPage()/7);
         int width = 7;
         int index =0;
-        InitializerAPI.errorLog(height+" "+width+" "+getMaxContentOnPage()+" CCCC");
         for(int i=0;i<height;i++)
         {
             for(int j=0;j<width;j++)

@@ -6,7 +6,6 @@ import jw.gui.examples.chestgui.bindingstrategies.BindingStrategy;
 import jw.gui.button.Button;
 import jw.utilites.binding.BindingField;
 import jw.utilites.files.FileHelper;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
 

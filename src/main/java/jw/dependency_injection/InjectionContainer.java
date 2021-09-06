@@ -14,6 +14,15 @@ public class InjectionContainer
         return serviceHashMap;
     }
 
+    public Injection getInjection(Class<?> _class)
+    {
+        if(serviceHashMap.containsKey(_class))
+        {
+            return serviceHashMap.get(_class);
+        }
+        return null;
+    }
+
     public <T> void register(InjectionType serviceType, Class<T> type)
     {
       if(serviceHashMap.containsKey(type))
@@ -31,7 +40,8 @@ public class InjectionContainer
                 return null;
             }
             Injection injection = serviceHashMap.get(type);
-            if(injection.getInjectionType() == InjectionType.TRANSIENT || !injection.isInit())
+            if(injection.getInjectionType() == InjectionType.TRANSIENT ||
+              !injection.isInit())
             {
               if(injection.setParams(this::getObject))
               {

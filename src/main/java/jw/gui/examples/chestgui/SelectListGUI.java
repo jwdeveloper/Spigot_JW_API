@@ -36,7 +36,7 @@ public class SelectListGUI extends SingleInstanceGUI<ListGUI> {
         return listGUI;
     }
 
-    public static ListGUI get(Player player, String title, ArrayList<Button> items, InventoryEvent acction) {
+    public static ListGUI get(Player player, String title, ArrayList<Button> items, InventoryEvent action) {
         ListGUI gui_list = instnace().getGUI(player);
         gui_list.setName(title);
        // gui_list.selectItem(acction);
@@ -45,7 +45,7 @@ public class SelectListGUI extends SingleInstanceGUI<ListGUI> {
         return gui_list;
     }
 
-    public static ListGUI get(Player player, SearchType searchType, InventoryEvent acction) {
+    public static ListGUI get(Player player, SearchType searchType, InventoryEvent action) {
         ListGUI gui_list = instnace().getGUI(player);
         ArrayList<Button> buttons = new ArrayList<>();
         switch (searchType) {

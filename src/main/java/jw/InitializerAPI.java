@@ -16,23 +16,23 @@ public final class InitializerAPI
     private static Plugin plugin;
     private static LoggerManager logger;
     private static DataManager dataManager;
-    public static Plugin getPlugin()
+    public  static Plugin getPlugin()
     {
         return  plugin;
     }
-    public static Logger logger()
+    public  static Logger logger()
     {
          return logger.getLogger();
     }
-    public static void errorLog(String message)
+    public  static void errorLog(String message)
     {
         log(ConsoleUtility.RED,message);
     }
-    public static void infoLog(String message)
+    public  static void infoLog(String message)
     {
         log(ConsoleUtility.YELLOW,message);
     }
-    public static void successLog(String message)
+    public  static void successLog(String message)
     {
         log(ConsoleUtility.GREEN,message);
     }
