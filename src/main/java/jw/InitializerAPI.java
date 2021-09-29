@@ -42,7 +42,6 @@ public final class InitializerAPI
         InitializerAPI.plugin = plugin;
         InitializerAPI.logger = new LoggerManager("JW API -"+plugin.getName());
         dataManager = new DataManager();
-        InjectionManager.Instance();
         InventoryGUIEventsHandler.Instance();
         MapEventsHandler.Instnace();
         InjectionManager.Instance();
