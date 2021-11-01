@@ -1,6 +1,6 @@
 package jw.commands.objectdiplay;
 
-import jw.commands.BetterCommand;
+import jw.commands.FluentCommand;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.ConsoleCommandSender;
@@ -10,7 +10,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.util.HashMap;
 
-public class MethodCommand extends BetterCommand
+public class MethodCommand extends FluentCommand
 {
     private Method method;
     private Object object;

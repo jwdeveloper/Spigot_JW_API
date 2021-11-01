@@ -1,29 +1,28 @@
 package jw.utilites.player;
 
 import jw.InitializerAPI;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.permissions.PermissionAttachment;
-
-import java.util.ArrayList;
+import org.bukkit.permissions.PermissionAttachmentInfo;
 
 public class PermissionUtility
 {
     public static void givePermission(Player player, String permission)
     {
-        PermissionAttachment attachment = player.addAttachment(InitializerAPI.getPlugin());
+        var attachment = player.addAttachment(InitializerAPI.getPlugin());
         attachment.setPermission(permission,true);
     }
 
-    public static ArrayList<String> getPermissions(Player player)
+    public static void removePermission(Player player, String permission)
     {
         player.getEffectivePermissions().forEach(permissionAttachmentInfo ->
         {
-            Bukkit.getConsoleSender().sendMessage(permissionAttachmentInfo.getPermission());
+            permissionAttachmentInfo.getAttachment().getPermissions();
         });
+    }
 
-
-        return  new ArrayList<>();
+    public static Object[] getPermissions(Player player)
+    {
+        return  player.getEffectivePermissions().stream().map(PermissionAttachmentInfo::getPermission).toArray();
     }
 
 }

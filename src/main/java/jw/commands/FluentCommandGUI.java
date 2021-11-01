@@ -6,14 +6,11 @@ import jw.gui.core.InventoryGUI;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-import java.util.HashMap;
-import java.util.UUID;
-
-public abstract class BetterCommandGUI extends BetterCommand
+public abstract class FluentCommandGUI extends FluentCommand
 {
 
     private final Class<? extends InventoryGUI> guiType;
-    public BetterCommandGUI(String name,Class<? extends InventoryGUI> guiType)
+    public FluentCommandGUI(String name, Class<? extends InventoryGUI> guiType)
     {
         super(name);
         this.guiType = guiType;
@@ -31,6 +28,6 @@ public abstract class BetterCommandGUI extends BetterCommand
 
     protected InventoryGUI getGUI(Player player)
     {
-        return InjectionManager.getObjectPlayer(guiType,player.getUniqueId());
+        return InjectionManager.getObjectByPlayer(guiType,player.getUniqueId());
     }
 }

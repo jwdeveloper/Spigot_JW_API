@@ -23,7 +23,7 @@ public class ColorHelper
 
     private char convertHexColorToNearestMinecraftColor(String hexColor) {
         java.awt.Color jColor = java.awt.Color.decode(hexColor);
-     //   DyeColor dColor = DyeColor.getByColor(Color.fromRGB(jColor.getRed(), jColor.getGreen(), jColor.getBlue())); // null
+      //   DyeColor dColor = DyeColor.getByColor(Color.fromRGB(jColor.getRed(), jColor.getGreen(), jColor.getBlue())); // null
       //  new ColorConverter();
       //  ChatColor cColor = ColorConverter.dyeToChat(dColor);
       //  return cColor.getChar();

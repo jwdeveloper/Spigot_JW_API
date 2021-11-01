@@ -3,7 +3,7 @@ package jw.commands;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-public class CommandHelper
+public class FluentCommandHelper
 {
     public static void invokeCommand(Player player, String command)
     {

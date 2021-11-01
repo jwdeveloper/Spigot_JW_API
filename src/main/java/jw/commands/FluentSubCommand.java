@@ -3,18 +3,18 @@ package jw.commands;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
-public class BetterSubCommand extends BetterCommand
+public class FluentSubCommand extends FluentCommand
 {
 
-    private CommandEvent commandEvent;
+    private FluentCommandEvent commandEvent;
 
     private boolean runByConsle =false;
-    public BetterSubCommand(String name, CommandEvent commandEvent)
+    public FluentSubCommand(String name, FluentCommandEvent commandEvent)
     {
         super(name,false);
         this.commandEvent = commandEvent;
     }
-    public BetterSubCommand(String name, CommandEvent commandEvent, boolean runByConsle)
+    public FluentSubCommand(String name, FluentCommandEvent commandEvent, boolean runByConsle)
     {
         this(name,commandEvent);
         this.runByConsle = runByConsle;

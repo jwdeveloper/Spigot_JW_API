@@ -1,16 +1,18 @@
 package jw.gui.examples.chestgui.selectionList;
 
+import jw.gui.button.Button;
 import jw.gui.button.ButtonActionsEnum;
 import jw.gui.core.InventoryGUI;
 import jw.gui.events.ButtonEvent;
 import jw.gui.events.InventoryEvent;
 import jw.gui.examples.chestgui.ListGUI;
 import jw.gui.examples.chestgui.utilites.ButtonMapper;
+import net.minecraft.world.item.ItemStack;
 import org.bukkit.entity.Player;
 
 import java.util.List;
 
-public class SelectGUI extends ListGUI
+public class SelectGUI<T> extends ListGUI<T>
 {
     public enum SearchType {
         PLAYERS, MATERIALS, INVENTORY, FILE, BLOCK, COLORS, FOOD
@@ -31,7 +33,6 @@ public class SelectGUI extends ListGUI
         this.onSelect = event;
         return this;
     }
-
     @Override
     public void onOpen(Player player)
     {

@@ -1,6 +1,7 @@
 package jw.dependency_injection;
 
 import jw.InitializerAPI;
+import org.bukkit.Bukkit;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -33,7 +34,6 @@ public class Injection {
         {
             return true;
         }
-
         for (int i = 0; i < parametersType.length; i++) {
             params[i] = mapParams.map(parametersType[i]);
 

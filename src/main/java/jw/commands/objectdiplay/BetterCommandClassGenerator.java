@@ -1,18 +1,14 @@
 package jw.commands.objectdiplay;
 
-import jw.commands.BetterCommand;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import jw.commands.FluentCommand;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 
 import java.lang.reflect.Method;
-import java.lang.reflect.Parameter;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-public class BetterCommandClassGenerator extends BetterCommand
+public class BetterCommandClassGenerator extends FluentCommand
 {
     private Object object;
     private Class _class;
@@ -50,7 +46,7 @@ public class BetterCommandClassGenerator extends BetterCommand
                 continue;
             }
 
-            this.addChild(new MethodCommand(object,method));
+            this.addSubCommand(new MethodCommand(object,method));
         }
     }
     @Override

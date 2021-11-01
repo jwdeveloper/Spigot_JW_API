@@ -2,6 +2,7 @@ package jw.commands;
 
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -13,13 +14,11 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-public abstract class BetterCommand extends BukkitCommand {
+public abstract class FluentCommand extends BukkitCommand {
 
-    private BetterCommand parent;
-    private String permission = "";
-    private String noPermissionMessage;
-    private boolean permissionSet;
-    private final ArrayList<BetterCommand> children = new ArrayList<>();
+    private FluentCommand parent;
+    private final ArrayList<String> permissions = new ArrayList<>();
+    private final ArrayList<FluentCommand> children = new ArrayList<>();
     private final HashMap<Integer, Supplier<ArrayList<String>>> tabCompletes = new HashMap<>();
     private final ArrayList<String> emptyTabCompletes = new ArrayList<>();
     private Consumer<CommandSender> OnNoArguments;
@@ -31,14 +30,14 @@ public abstract class BetterCommand extends BukkitCommand {
 
     public abstract void onInitialize();
 
-    public BetterCommand(String name, boolean registerCommand) {
+    public FluentCommand(String name, boolean registerCommand) {
         super(name);
         if (registerCommand)
             registerCommands();
         onInitialize();
     }
 
-    public BetterCommand(String name) {
+    public FluentCommand(String name) {
         super(name);
         registerCommands();
         onInitialize();
@@ -47,10 +46,10 @@ public abstract class BetterCommand extends BukkitCommand {
 
     @Override
     public List<String> tabComplete(CommandSender sender, String alias, String[] args) throws IllegalArgumentException {
-        BetterCommand target = this;
+        FluentCommand target = this;
         String[] arguments = args;
         if (args.length != 0) {
-            BetterCommand child_invoked = target.isChildInvoked(args);
+            FluentCommand child_invoked = target.isChildInvoked(args);
             if (child_invoked != null) {
                 target = child_invoked;
                 for (int j = 0; j < args.length; j++) {
@@ -69,15 +68,21 @@ public abstract class BetterCommand extends BukkitCommand {
         this.commandResult = result;
     }
 
+
+    public  boolean execute(String... args)
+    {
+        return execute(null,"",args);
+    }
+
     @Override
-    public boolean execute(CommandSender commandSender, String s, String[] args) {
-        BetterCommand target = this;
+    public boolean execute(CommandSender commandSender, String commandLabel, String[] args) {
+        FluentCommand target = this;
         String[] arguments = args;
         commandResult = true;
         if (args.length != 0) {
             //null nie jest najlepszym rozwiazaniem, ale komu by sie chcialo robic opcjonala
             //magia połaczona z rekurencją
-            BetterCommand child_invoked = target.isChildInvoked(args);
+            FluentCommand child_invoked = target.isChildInvoked(args);
             if (child_invoked != null) {
                 target = child_invoked;
 
@@ -95,10 +100,16 @@ public abstract class BetterCommand extends BukkitCommand {
         }
         if (commandSender instanceof Player) {
             //sprawdzanie permisji
-            if (target.permissionSet && !((Player) commandSender).hasPermission(target.permission))
+            if (target.permissions.size() != 0 )
             {
-                commandSender.sendMessage(target.noPermissionMessage + ": " + target.permission);
-                return commandResult;
+                for (var permission:permissions)
+                {
+                    if(!(commandSender).hasPermission(permission))
+                    {
+                        commandSender.sendMessage(ChatColor.RED+"You need permission: "+permission);
+                        return commandResult;
+                    }
+                }
             }
             target.onInvoke((Player) commandSender, arguments);
         } else {
@@ -118,9 +129,9 @@ public abstract class BetterCommand extends BukkitCommand {
     }
 
     //rekurencja bejbe
-    public BetterCommand isChildInvoked(String[] args) {
-        BetterCommand result = null;
-        for (BetterCommand c : children) {
+    public FluentCommand isChildInvoked(String[] args) {
+        FluentCommand result = null;
+        for (FluentCommand c : children) {
             //szukanie komendy wsrod dzieci
             if (args.length > 1) {
                 String[] part = Arrays.copyOfRange(args, 1, args.length);
@@ -137,25 +148,36 @@ public abstract class BetterCommand extends BukkitCommand {
         }
         return result;
     }
-
-    public void setPermission(String name, String error) {
-        this.permission = name;
-        this.noPermissionMessage = error;
-        this.permissionSet = true;
+    public FluentCommand addPermission(String name)
+    {
+        if(permissions.contains(name))
+            return this;
+        this.permissions.add(name);
+        return  this;
     }
-
-    public void setPermission(String error) {
-
-        String result = this.getName();
-        BetterCommand command = this.parent;
-        while (command != null) {
-            result = command.getName() + "." + result;
+    public FluentCommand addPermission(String... name)
+    {
+        for(var permission: name)
+        {
+            if(permissions.contains(permission))
+                return this;
+            this.permissions.add(permission);
         }
-        this.permission = result;
-        this.noPermissionMessage = error;
-        this.permissionSet = true;
+        return  this;
     }
 
+    public FluentCommand addDefaultPermission()
+    {
+        //x.a.b.c
+        String result = this.getName();
+        FluentCommand parent = this.parent;
+        while(parent != null)
+        {
+            result = parent.getName()+"."+result;
+            parent = parent.parent;
+        }
+        return  addPermission(result);
+    }
 
     public ArrayList<String> getTabCompleter(int argument) {
         return tabCompletes.getOrDefault(argument, () -> {
@@ -188,9 +210,10 @@ public abstract class BetterCommand extends BukkitCommand {
         });
     }
 
-    public void setParent(BetterCommand parent)
+    public FluentCommand setParent(FluentCommand parent)
     {
         this.parent = parent;
+        return this;
     }
 
     public void setNoArgsError(Consumer<CommandSender> acction) {
@@ -201,17 +224,19 @@ public abstract class BetterCommand extends BukkitCommand {
         tabCompletes.putIfAbsent(argument, acction);
     }
 
-    public void addChild(BetterCommand child) {
+    public FluentCommand addSubCommand(FluentCommand child) {
         child.setParent(this);
         children.add(child);
+        return this;
     }
     
-    public void addChild(String name,CommandEvent commandEvent)
+    public FluentCommand addSubCommand(String name, FluentCommandEvent commandEvent)
     {
-        this.addChild(new BetterSubCommand(name,commandEvent));
+        this.addSubCommand(new FluentSubCommand(name,commandEvent));
+        return this;
     }
     
-    public void removeChild(BetterCommand child) {
+    public void removeChild(FluentCommand child) {
         child.parent = null;
         children.remove(child);
     }

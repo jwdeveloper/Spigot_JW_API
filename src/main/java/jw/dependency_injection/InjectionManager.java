@@ -2,6 +2,7 @@ package jw.dependency_injection;
 
 import jw.utilites.ClassLoaderUtility;
 import jw.utilites.ObjectHelper;
+import org.bukkit.entity.Player;
 
 import java.util.*;
 
@@ -41,7 +42,12 @@ public class InjectionManager {
         return instance.serviceContainer.getObject(tClass);
     }
 
-    public static <T> T getObjectPlayer(Class<T> tClass,UUID uuid)
+    public static <T> T getObjectByPlayer(Class<T> tClass, Player player)
+    {
+        return (T)getObjectByPlayer(tClass,player);
+    }
+
+    public static <T> T getObjectByPlayer(Class<T> tClass, UUID uuid)
     {
         if(!instance.playerObjects.containsKey(uuid))
         {
